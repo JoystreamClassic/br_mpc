@@ -10,7 +10,7 @@ var test = require('tape')
 // Check that extension is properly registered: 
 test('wire.use(br_mpc())', function (t) {
   var wire = new Protocol()
-  wire.pipe(wire)
+  wire.pipe(wire)  // why is this piping required here?
   wire.use(br_mpc())
 
   t.ok(wire.br_mpc, 'Check that handler object is registered')
@@ -20,7 +20,7 @@ test('wire.use(br_mpc())', function (t) {
   
   // br_mpc not supported
   wire.br_mpc.on('warning', function (err) {
-    t.ok(true, 'Extended handshake without br_mpc m dicitonary key fails properly');
+    t.pass('Extended handshake without br_mpc m dicitonary key fails properly');
   })
   wire.br_mpc.onExtendedHandshake(1)
   

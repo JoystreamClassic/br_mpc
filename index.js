@@ -9,22 +9,22 @@ var EventEmitter = require('events').EventEmitter
 var inherits = require('util').inherits
 
 // MPC message IDs
-var MESSAGEID_MPC_LIST = 1
-var MESSAGEID_MPC_OFFER = 2
-var MESSAGEID_MPC_SETUP_BEGIN = 3
-var MESSAGEID_MPC_SETUP_BEGIN_REJECT = 4
-var MESSAGEID_MPC_SETUP_BEGIN_ACCEPT = 5
-var MESSAGEID_MPC_SETUP_CONTRACT = 6
-var MESSAGEID_MPC_SETUP_CONTRACT_SIGNED = 7
-var MESSAGEID_MPC_SETUP_REFUND = 8
-var MESSAGEID_MPC_SETUP_REFUND_SIGNED = 9
-var MESSAGEID_MPC_SETUP_CONTRACT_PUBLISHED = 10
-var MESSAGEID_MPC_SETUP_COMPLETED = 11
-var MESSAGEID_MPC_PIECE_GET = 12
-var MESSAGEID_MPC_PIECE_MISSING = 13
-var MESSAGEID_MPC_PIECE_PUT = 14
-var MESSAGEID_MPC_PIECE_PAYMENT = 15
-var MESSAGEID_MPC_END = 16
+var MESSAGEID_LIST = 1
+var MESSAGEID_OFFER = 2
+var MESSAGEID_SETUP_BEGIN = 3
+var MESSAGEID_SETUP_BEGIN_REJECT = 4
+var MESSAGEID_SETUP_BEGIN_ACCEPT = 5
+var MESSAGEID_SETUP_CONTRACT = 6
+var MESSAGEID_SETUP_CONTRACT_SIGNED = 7
+var MESSAGEID_SETUP_REFUND = 8
+var MESSAGEID_SETUP_REFUND_SIGNED = 9
+var MESSAGEID_SETUP_CONTRACT_PUBLISHED = 10
+var MESSAGEID_SETUP_COMPLETED = 11
+var MESSAGEID_PIECE_GET = 12
+var MESSAGEID_PIECE_MISSING = 13
+var MESSAGEID_PIECE_PUT = 14
+var MESSAGEID_PIECE_PAYMENT = 15
+var MESSAGEID_END = 16
 	
 module.exports = function (metadata) {
 	
@@ -63,44 +63,53 @@ module.exports = function (metadata) {
 		
 		switch (message_id) {
 		
-			case MESSAGEID_MPC_LIST:
-				return this._onMpcList()
-		    case MESSAGEID_MPC_OFFER:
-		    	return this._onMpcOffered()
-		    case MESSAGEID_MPC_SETUP_BEGIN:
+			case MESSAGEID_LIST:
+				return this._List()
+			/*
+		    case MESSAGEID_OFFER:
+		    	return this._onMpcOffere()
+		    case MESSAGEID_SETUP_BEGIN:
 		    	return this._onMpcSetupBegin()
-		    case MESSAGEID_MPC_SETUP_BEGIN_REJECT:
+		    case MESSAGEID_SETUP_BEGIN_REJECT:
 		    	return this._onMpcSetupBeginReject()
-		    case MESSAGEID_MPC_SETUP_BEGIN_ACCEPT:
+		    case MESSAGEID_SETUP_BEGIN_ACCEPT:
 		    	return this._onHave(buffer.readUInt32BE(1))
-		    case MESSAGEID_MPC_SETUP_CONTRACT:
+		    case MESSAGEID_SETUP_CONTRACT:
 		    	return this._onBitField(buffer.slice(1))
-		    case MESSAGEID_MPC_SETUP_CONTRACT_SIGNED:
+		    case MESSAGEID_SETUP_CONTRACT_SIGNED:
 		    	return this._onRequest(buffer.readUInt32BE(1),
 		          buffer.readUInt32BE(5), buffer.readUInt32BE(9))
-		    case MESSAGEID_MPC_SETUP_REFUND:
+		    case MESSAGEID_SETUP_REFUND:
 		    	return this._onPiece(buffer.readUInt32BE(1),
 		          buffer.readUInt32BE(5), buffer.slice(9))
-		    case MESSAGEID_MPC_SETUP_REFUND_SIGNED:
+		    case MESSAGEID_SETUP_REFUND_SIGNED:
 		    	return this._onCancel(buffer.readUInt32BE(1),
 		          buffer.readUInt32BE(5), buffer.readUInt32BE(9))
-		    case MESSAGEID_MPC_SETUP_CONTRACT_PUBLISHED:
+		    case MESSAGEID_SETUP_CONTRACT_PUBLISHED:
 		    	return this._onPort(buffer.readUInt16BE(1))
-		    case MESSAGEID_MPC_SETUP_COMPLETED:
+		    case MESSAGEID_SETUP_COMPLETED:
 		    	return this._onExtended(buffer.readUInt8(1), buffer.slice(2))
-		    case MESSAGEID_MPC_PIECE_GET:
+		    case MESSAGEID_PIECE_GET:
 			    return this._onPort(buffer.readUInt16BE(1))
-			case MESSAGEID_MPC_PIECE_MISSING:
+			case MESSAGEID_PIECE_MISSING:
 			    return this._onExtended(buffer.readUInt8(1), buffer.slice(2))
-			case MESSAGEID_MPC_PIECE_PUT:
+			case MESSAGEID_PIECE_PUT:
 				return this._onPort(buffer.readUInt16BE(1))
-			case MESSAGEID_MPC_PIECE_PAYMENT:
+			case MESSAGEID_PIECE_PAYMENT:
 				return this._onExtended(buffer.readUInt8(1), buffer.slice(2))
-			case MESSAGEID_MPC_END:
-			    return this._onExtended(buffer.readUInt8(1), buffer.slice(2))
+			case MESSAGEID_END:
+			    return this._onExtended(buffer.readUInt8(1), buffer.slice(2))*/
 		  }
 		  
-		  this.emit('unknownmessage', buffer)
+		  this.emit('unknown_message', buffer)
+	}
+	
+	//
+	// Consider putting these message handler is separate files later
+	//
+	
+	br_mpc.prototype._onList = function () {
+		return this.emit('list')
 	}
 
 	return br_mpc
