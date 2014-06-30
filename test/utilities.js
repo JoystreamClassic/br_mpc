@@ -7,12 +7,13 @@ var is_int = require('../utilities').is_int
 var messageFactory = require('../utilities').messageFactory
 
 // Factory
-test('messageFactory(Buffer)', function (t) {
+test('messageFactory(buffer)', function (t) {
 	
-  	// for alle meldinger
-		// genererer buffer basert melding basert pa variable
-		// be systemet om a parse den buffer baserte meldingen
-		// sjekk at parsingen gir riktig melding og verdier i meldingen
+	// For each message: build buffer, and confirm that output values match constructor arguments
+	
+	//msg = new require('../message/list')()
+	//messageFactory
+	//t.ok()
 	
 	t.end()
 })

@@ -4,6 +4,7 @@
 
 message = require('./message')
 inherits = require('util').inherits
+ID_TO_NAME = require('../variables').ID_TO_NAME
 
 module.exports = list
 
@@ -12,11 +13,7 @@ inherits(list, message)
 
 /**
  *  Constructor for list class
- * @param  {Buffer|Object} arg
  */
-function list(arg) {
-	
-	// Call Message constructor
-	message.call(this, arg)
-
+function list() {
+	message.call(this, ID_TO_NAME.list)
 }

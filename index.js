@@ -7,6 +7,7 @@ var bencode = require('bencode')
 var EventEmitter = require('events').EventEmitter
 var inherits = require('util').inherits
 var messageFactory = require('./utilities').messageFactory
+var ID_TO_NAME = require('./variables').ID_TO_NAME
 
 var Message = require('./message/message.js')
 
@@ -47,12 +48,13 @@ module.exports = function () {
 			
 			// Parse message
 			m = messageFactory(buffer)
+			name = ID_TO_NAME[m.id]
 			
 			// Emit event
-			this.emit(m.name, m)
+			this.emit(name, m)
 			
 			// Log
-			console.log('Received message: ' + m.name)
+			console.log('Received message: ' + name)
 			
 		} catch (err) {
 			console.log('Error: ' + err.toString())
