@@ -1,41 +1,58 @@
 /**
- * Basic testing
+ * Extension (br_mpc) testing
  */
 
-var Protocol = require('bittorrent-protocol')
-var br_mpc = require('../')
-var bencode = require('bencode')
-var test = require('tape')
+var Protocol = require('bittorrent-protocol');
+var br_mpc = require('../');
+var expect = require('chai').expect;
 
 // Check that extension is properly registered: 
-test('wire.use(br_mpc())', function (t) {
-	
-	t.plan(6);
-	
-	var wire = new Protocol()
-	//wire.pipe(wire)  // why is this piping required here?
-	wire.use(br_mpc())
+describe('Handler object is registered', function () {
 
-	t.ok(wire.br_mpc, 'Check that handler object is registered')
-	t.ok(wire.br_mpc.onHandshake, 'Check that handler has handshake callback')
-	t.ok(wire.br_mpc.onExtendedHandshake, 'Check that handler extended handhsake callback')
-	t.ok(wire.br_mpc.onMessage, 'Check that handler handler has message callback')
-  
-	// br_mpc not supported
-	wire.br_mpc.on('warning', function (err) {
-		t.pass('Extended handshake without br_mpc m dicitonary key fails properly');
-	}).onExtendedHandshake(1)
-  
-	// br_mpc supported
-	t.notok(wire.br_mpc.onExtendedHandshake({m : {br_mpc : 1}}), 'Extended handshake with br_mpc m dictionary key succeeds')
+	var wire = new Protocol();
+	wire.use(br_mpc());
 
-})
+    it('Handler object is registered', function(){
+        expect(wire).to.have.property('br_mpc');
+        expect(wire).to.have.deep.property('br_mpc.onHandshake');
+        expect(wire).to.have.deep.property('br_mpc.onExtendedHandshake');
+        expect(wire).to.have.deep.property('br_mpc.onMessage');
+    });
+});
 
-// Correct event is fired:
-test('wire.onMessage(buffer)', function (t) {
+// Check that extension is properly registered:
+describe('Extended handshake message processing', function () {
+
+    var wire = new Protocol();
+    wire.use(br_mpc());
+    var handshakeProcessor = wire.br_mpc._supportsExtension;
+
+    it('Extended handshake without br_mpc m dictionary key fails properly', function(){
+        expect(handshakeProcessor()).to.be.false;
+        expect(handshakeProcessor({})).to.be.false;
+        expect(handshakeProcessor({m : []})).to.be.false;
+    });
+
+    it('Extended handshake with br_mpc m dictionary key succeeds', function(){
+        expect(handshakeProcessor({m : {br_mpc : {}}})).to.be.true;
+    });
+});
+
+var list = require('../message/list');
+
+// Factory
+describe('Message encoding/decoding', function () {
 	
-  	// for alle meldinger
-	// correct message is invoked
-	
-	t.end()
-})
+	// Create extension object
+	var ext = new (br_mpc())();
+
+    it('list', function(){
+        var msg = new list();
+        b = msg.toBuffer();
+
+        expect(ext._bufferToMessage(b)).to.deep.equal(msg);
+
+        // onMessage fires correct event?
+    });
+
+});

@@ -1,27 +1,21 @@
 /**
  * Utilities class testing
  */
+var expect = require('chai').expect;
+var is_int = require('../utilities').is_int;
 
-var test = require('tape')
-var is_int = require('../utilities').is_int
-var messageFactory = require('../utilities').messageFactory
+// Integer
+describe('is_int(value)', function(){
 
-// Factory
-test('messageFactory(buffer)', function (t) {
-	
-	// For each message: build buffer, and confirm that output values match constructor arguments
-	
-	//msg = new require('../message/list')()
-	//messageFactory
-	//t.ok()
-	
-	t.end()
-})
+    it('False negatives', function(){
+        expect(is_int(1)).to.be.true;
+        expect(is_int(-1)).to.be.true;
+        expect(is_int(0)).to.be.true;
+    });
 
-// Factory
-test('is_int(value)', function (t) {
-	
-  	t.ok(is_int(1) && is_int(-1) && is_int(0),'Integers are correctly identified')
-  	t.notOk(is_int(NaN) || is_int(undefined) || is_int(3.14),'Non integers are correctly identified')
-	t.end()
-})
+    it('False positives', function(){
+        expect(is_int(NaN)).to.be.false;
+        expect(is_int(undefined)).to.be.false;
+        expect(is_int(3.14)).to.be.false;
+    });
+});
