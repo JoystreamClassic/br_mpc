@@ -7,8 +7,8 @@ var bencode = require('bencode');
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('util').inherits;
 
-var ID_TO_NAME = require('./variables').ID_TO_NAME;
-var NAME_TO_ID = require('./variables').NAME_TO_ID;
+var MESSAGE_ID_TO_NAME = require('./variables').MESSAGE_ID_TO_NAME;
+var MESSAGE_NAME_TO_ID = require('./variables').MESSAGE_NAME_TO_ID;
 
 var list = require('./message/list');
 
@@ -45,13 +45,18 @@ module.exports = function () {
 	 * @param  {Buffer} buffer
 	 */
 	br_mpc.prototype._bufferToMessage = function (buffer) {
-		var id = buffer[0];
-		var restOfBuffer = buffer.slice(1, buffer.length); // is this CORRECT? // is this CORRECT?// is this CORRECT?
-		
+
+        if(buffer.length == 0)
+            throw new Error('Buffer empty');
+        else
+		    var id = buffer[0];
+
 		switch (id) {
 		
-			case NAME_TO_ID.list:
+			case MESSAGE_NAME_TO_ID.list:
 				return new list();
+            case MESSAGE_NAME_TO_ID.offer:
+                return new offer(buffer);
 		}
 	};
 	
@@ -60,8 +65,8 @@ module.exports = function () {
 		try {
 			
 			// Parse message
-            var m = _bufferToMessage(buffer);
-			var name = ID_TO_NAME[m.id];
+            var m = this._bufferToMessage(buffer);
+			var name = MESSAGE_ID_TO_NAME[m.id];
 			
 			// Emit event
 			this.emit(name, m);

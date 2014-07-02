@@ -54,5 +54,14 @@ describe('Message encoding/decoding', function () {
 
         // onMessage fires correct event?
     });
+/*
+    it('offer', function(){
+        var msg = new offer();
+        b = msg.toBuffer();
 
+        expect(ext._bufferToMessage(b)).to.deep.equal(msg);
+
+        // onMessage fires correct event?
+    });
+*/
 });

@@ -3,7 +3,7 @@
  */
 
 // Array of messages
-var ID_TO_NAME = [
+var MESSAGE_ID_TO_NAME = [
 	'list',
 	'offer',
 	'setup_begin',
@@ -21,13 +21,32 @@ var ID_TO_NAME = [
 	'piece_payment',
 	'end'];
 
-module.exports.ID_TO_NAME = ID_TO_NAME;
-module.exports.NUM_MSG = ID_TO_NAME.length;
+module.exports.MESSAGE_ID_TO_NAME = MESSAGE_ID_TO_NAME;
+module.exports.NUM_MSG = MESSAGE_ID_TO_NAME.length;
 
 // Generate reverse message lookup
-var NAME_TO_ID = {};
-for(var i = 0;i < ID_TO_NAME.length;i++) {
-	NAME_TO_ID[ID_TO_NAME[i]] = i;
+var MESSAGE_NAME_TO_ID = {};
+for(var i = 0;i < MESSAGE_ID_TO_NAME.length;i++) {
+    MESSAGE_NAME_TO_ID[MESSAGE_ID_TO_NAME[i]] = i;
 }
 
-module.exports.NAME_TO_ID = NAME_TO_ID;
+module.exports.MESSAGE_NAME_TO_ID = MESSAGE_NAME_TO_ID;
+
+//Array of currencies
+var CURRENCY_ID_TO_NAME = [
+    'BitCoin',
+    'LiteCoin',
+    'DogeCoin',
+    'SwapCoin'
+];
+
+module.exports.CURRENCY_ID_TO_NAME = CURRENCY_ID_TO_NAME;
+module.exports.NUM_CURRENCIES = CURRENCY_ID_TO_NAME.length;
+
+// Generate reverse message lookup
+var CURRENCY_NAME_TO_ID = {};
+for(var i = 0;i < CURRENCY_ID_TO_NAME.length;i++)
+    CURRENCY_NAME_TO_ID[CURRENCY_ID_TO_NAME[i]] = i;
+
+module.exports.CURRENCY_NAME_TO_ID = CURRENCY_NAME_TO_ID;
+
