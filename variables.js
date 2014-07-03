@@ -1,5 +1,6 @@
 /**
  * Global variables
+ * Created by Bedeho Mender on 02.07.2014.
  */
 
 // Array of messages
@@ -49,4 +50,3 @@ for(var i = 0;i < CURRENCY_ID_TO_NAME.length;i++)
     CURRENCY_NAME_TO_ID[CURRENCY_ID_TO_NAME[i]] = i;
 
 module.exports.CURRENCY_NAME_TO_ID = CURRENCY_NAME_TO_ID;
-

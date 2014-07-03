@@ -1,9 +1,9 @@
 /**
  * Implementation of BEP 43 extension
  * https://github.com/bedeho/BEP43
+ * Created by Bedeho Mender on 02.07.2014.
  */
 
-var bencode = require('bencode');
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('util').inherits;
 
@@ -11,6 +11,7 @@ var MESSAGE_ID_TO_NAME = require('./variables').MESSAGE_ID_TO_NAME;
 var MESSAGE_NAME_TO_ID = require('./variables').MESSAGE_NAME_TO_ID;
 
 var list = require('./message/list');
+var offer = require('./message/offer');
 
 module.exports = function () {
 	
@@ -72,7 +73,7 @@ module.exports = function () {
 			this.emit(name, m);
 			
 			// Log
-			console.log('Received message: ' + name);
+			//console.log('Received message: ' + name);
 			
 		} catch (err) {
 			console.log('Error: ' + err.toString());

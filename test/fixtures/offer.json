@@ -1,0 +1,33 @@
+{
+    "invalid": [
+        {
+           "description": "passed to few arguments",
+           "arguments": [],
+           "exception": "Invalid argument: To few arguments provided."
+        },
+		{
+           "description": "passed to invalid currency",
+           "arguments": [
+							[67],
+							[],
+							[],
+							[],
+							[]
+						],
+           "exception": "Invalid currency: 67"
+        },
+        {
+           "description": "passed to invalid bandwidth",
+           "arguments": [
+                            [1],
+                            [1, 2, 1000, -3],
+                            [],
+                            [],
+                            []
+						],
+            "exception": "Invalid bandwidth: -3"
+        }
+    ],
+
+   "valid" : []
+}

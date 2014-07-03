@@ -1,5 +1,6 @@
 /**
  * The parent class for all message classes
+ * Created by Bedeho Mender on 02.07.2014.
  */
 
 var is_int = require('../utilities').is_int;
