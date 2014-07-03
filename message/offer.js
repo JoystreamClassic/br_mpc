@@ -76,7 +76,7 @@ offer.prototype.toBuffer = function() {
     };
 
     // Encode
-    b2 = bencode(o);
+    b2 = bencode.encode(o);
 
     // Combine temporary buffers and return result
     return Buffer.concat([b1, b2]);
@@ -165,9 +165,9 @@ offer.prototype._schedule_check = function (field) {
         else if(schedule[i].length != numberOfBandwidths)
             throw new Error('Invalid ' + field +'[' + i + ']: incorrect number of bandwidths');
         else {
-            schedule[i].forEach(function(b) {
-                if(!is_int(b) || b < 0)
-                    throw new Error('Invalid ' + field +'[' + i + ']: contains invalid bandwidth' + b);
+            schedule[i].forEach(function(n) {
+                if(!is_int(n) || n < 0)
+                    throw new Error('Invalid ' + field +'[' + i + ']: non natural number ' + n);
             });
         }
     }

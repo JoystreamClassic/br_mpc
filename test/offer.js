@@ -7,6 +7,8 @@ var expect = require('chai').expect;
 
 var offer = require('../message/offer');
 var fixtures = require('./fixtures/offer.json');
+// This fixture file only test .price explicitly, but since same checks
+// on the two other fields, that is fine for now.
 
 describe('offer', function () {
 
@@ -14,31 +16,15 @@ describe('offer', function () {
 
         // function which chai will call
         return function () {
-
-            switch (x.length) {
-                case 0:
-                    new offer();
-                    break;
-                case 1:
-                    new offer(x[0]);
-                    break;
-                case 2:
-                    new offer(x[0], x[1]);
-                    break;
-                case 3:
-                    new offer(x[0], x[1], x[2]);
-                    break;
-                case 4:
-                    new offer(x[0], x[1], x[2], x[3]);
-                    break;
-                case 5:
-                    new offer(x[0], x[1], x[2], x[3], x[4]);
-                    break;
-            }
+            return new offer(x.currencies, x.bandwidths, x.price, x.fee, x.minimum);
         };
     };
 
-    describe('constructor correctly throws when ', function () {
+    describe('constructor throws when passed ', function () {
+
+        it('to few arguments', function () {
+            expect(function() {return new offer();}).to.throw('Invalid argument: To few arguments provided.');
+        });
 
         fixtures.invalid.forEach(function (element) {
 
@@ -48,7 +34,7 @@ describe('offer', function () {
         });
     });
 
-    describe('constructor correctly does not throw when ', function () {
+    describe('constructor does not throw when passed', function () {
 
         fixtures.valid.forEach(function (element) {
 
@@ -58,6 +44,18 @@ describe('offer', function () {
         });
     });
 
-    // add stuff about buffers!!!
+
+    describe('composition of encoding and decoding is consistent when passed', function () {
+
+        fixtures.valid.forEach(function (element) {
+
+            it(element.description, function () {
+
+                var msg = fn(element.arguments)();
+
+                expect(new offer(msg.toBuffer())).to.deep.equal(msg);
+            });
+        });
+    });
 
 });
