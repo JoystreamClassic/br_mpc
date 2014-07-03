@@ -75,7 +75,7 @@
 			"fee":[],
 			"minimum":[]
 		 },
-		 "exception":"Invalid price[0]: non natural number -2"
+		 "exception":"Invalid price[0]: non-natural number -2"
 		}
    ],
    "valid":[

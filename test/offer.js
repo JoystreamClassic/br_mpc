@@ -12,11 +12,11 @@ var fixtures = require('./fixtures/offer.json');
 
 describe('offer', function () {
 
-    var fn = function (x) {
+    var fn = function (args) {
 
         // function which chai will call
         return function () {
-            return new offer(x.currencies, x.bandwidths, x.price, x.fee, x.minimum);
+            return new offer(args.currencies, args.bandwidths, args.price, args.fee, args.minimum);
         };
     };
 

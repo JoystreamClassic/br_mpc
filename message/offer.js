@@ -17,47 +17,36 @@ var is_int = require('../utilities').is_int;
  *  Constructor for list class
  *  @param {Buffer} full buffer with raw message, including id
  *  or
- *  @param {BitField?} currencies
- *  @param {Array} bandwiths
+ *  @param {Array} currencies
+ *  @param {Array} bandwidths
+ *  @param {Array} price
+ *  @param {Array} fee
  */
 function offer() {
+
+    message.call(this, MESSAGE_NAME_TO_ID.offer);
 
     if(arguments.length == 0)
         throw new Error('Invalid argument: To few arguments provided.');
     else if(arguments.length == 1) {
 
         // Don't bother checking if (arguments[0] instanceof Buffer), throw new Error('Invalid argument: Buffer needed.');
+
         var o = this._parseBuffer(arguments[0]);
 
         if(o.id != MESSAGE_NAME_TO_ID.offer)
             throw new Error('Invalid argument: Incorrect message id.');
         else
-            message.call(this, o.id);
+            this._set_and_validate(o.currencies,  o.bandwidths, o.price, o.fee, o.minimum);
 
-        this.currencies = o.currencies;
-        this.bandwidths = o.bandwidths;
-        this.price = o.price;
-        this.fee = o.fee;
-        this.minimum = o.minimum;
-    } else if(arguments.length >= 5){
-
-        message.call(this, MESSAGE_NAME_TO_ID.offer);
-
-        this.currencies = arguments[0];
-        this.bandwidths = arguments[1];
-        this.price = arguments[2];
-        this.fee = arguments[3];
-        this.minimum = arguments[4];
-    }
-
-    // Check that message fields are well formed and consistent
-    this._validate();
+    } else if(arguments.length >= 5)
+        this._set_and_validate(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
 }
-
-module.exports = offer;
 
 // Inherit from Message class
 inherits(offer, message);
+
+module.exports = offer;
 
 /**
  *  Transform message into raw buffer form
@@ -86,43 +75,26 @@ offer.prototype.toBuffer = function() {
  *  Transform raw buffer into message
  */
 offer.prototype._parseBuffer = function(buffer) {
-
-    /*
-    // Check that at least id is present,
-    // in practice this is double check,
-    // but needed in case message is called from else where
-    if(buffer.length > 0)
-        throw new Error('Buffer empty');
-    else
-     var id = buffer[0];
-    */
-
-    var id = buffer[0];
-
-    var d;
-
-    try {
-        d = bencode.decode(buffer.slice(1,buffer.length));
-    } catch (e) {
-        throw new Error('Invalid encoding: ' + e);
-    }
-
-    // Check that all keys are present
-    ['currencies','bandwidths','price','fee','minimum'].forEach(function(f) {
-        if(!(f in d))
-            throw new Error('Invalid argument: ' + f + ' field missing');
-    });
-
-    // Add id field
-    d.id = id;
-
-    return d;
+    return call(offer.super_, this) .;
+    //_parseBuffer(buffer, ['currencies','bandwidths','price','fee','minimum'])
+    // how to call parent method!
 }
 
 /**
  *  Check that message is valid
  */
-offer.prototype._validate = function() {
+offer.prototype._set_and_validate = function(currencies, bandwidths, price, fee, minimum) {
+
+    // Set properties
+    this.currencies = currencies;
+    this.bandwidths = bandwidths;
+    this.price = price;
+    this.fee = fee;
+    this.minimum = minimum;
+
+    // Derived properties
+    this.numberOfCurrencies = this.currencies.length;
+    this.numberOfBandwidths = this.bandwidths.length;
 
     // Only includes valid currencies
     this.currencies.forEach(function (c) {
@@ -151,23 +123,20 @@ offer.prototype._schedule_check = function (field) {
     if(!Array.isArray(schedule))
         throw new Error('Invalid ' + field +' field: not of type Array');
 
-    var numberOfCurrencies = this.currencies.length;
-    var numberOfBandwidths = this.bandwidths.length;
-
-    if(schedule.length != numberOfCurrencies)
+    if(schedule.length != this.numberOfCurrencies)
         throw new Error('Invalid ' + field +' field: incorrect number of currencies');
 
     // Each field has, for each currency, one value per speed
-    for(var i = 0;i < numberOfCurrencies;i++) {
+    for(var i = 0;i < this.numberOfCurrencies;i++) {
 
         if(!Array.isArray(schedule[i]))
             throw new Error('Invalid ' + field +'[' + i + ']: not of type Array');
-        else if(schedule[i].length != numberOfBandwidths)
+        else if(schedule[i].length != this.numberOfBandwidths)
             throw new Error('Invalid ' + field +'[' + i + ']: incorrect number of bandwidths');
         else {
             schedule[i].forEach(function(n) {
                 if(!is_int(n) || n < 0)
-                    throw new Error('Invalid ' + field +'[' + i + ']: non natural number ' + n);
+                    throw new Error('Invalid ' + field +'[' + i + ']: non-natural number ' + n);
             });
         }
     }

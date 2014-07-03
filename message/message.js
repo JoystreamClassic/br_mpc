@@ -35,3 +35,31 @@ message.prototype._toBuffer = function() {
 	// Return fresh buffer
 	return new Buffer([this.id]);
 };
+
+
+/**
+ *  Transform raw buffer into message
+ */
+message.prototype._parseBuffer = function(buffer, requiredFields) {
+
+    var id = buffer[0];
+
+    var d;
+
+    try {
+        d = bencode.decode(buffer.slice(1,buffer.length));
+    } catch (e) {
+        throw new Error('Invalid encoding: ' + e);
+    }
+
+    // Check that all keys are present
+    requiredFields.forEach(function(f) {
+        if(!(f in d))
+            throw new Error('Invalid argument: ' + f + ' field missing');
+    });
+
+    // Add id field
+    d.id = id;
+
+    return d;
+}

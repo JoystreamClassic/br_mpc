@@ -49,19 +49,42 @@ describe('Extended handshake message processing', function () {
 });
 
 var list = require('../message/list');
+var offer = require('../message/offer');
+var offer_fixtures = require('./fixtures/offer.json');
 
 // Check that br_mpc.onMessage fires correct event
-describe('Message processing', function () {
+describe('Message processing works for message', function () {
+
+    // ms Timeout used for all done() callbackss
+    this.timeout(500);
 	
 	// Create extension object
 	var ext = new (br_mpc())();
 
-    /*
-    it('list', function(){
+    it('list', function(done){
         var msg = new list();
         b = msg.toBuffer();
 
-        //expect(ext._bufferToMessage(b)).to.deep.equal(msg);
+        ext.on('list',function (m) {
+            expect(true).to.be.true;
+            done();
+        });
+
+        ext.onMessage(b);
     });
-    */
+
+    it('offer', function(done){
+
+        var args = offer_fixtures.valid[0].arguments;
+        var msg = new offer(args.currencies, args.bandwidths, args.price, args.fee, args.minimum);
+        b = msg.toBuffer();
+
+        ext.on('offer',function (m) {
+            expect(true).to.be.true;
+            done();
+        });
+
+        ext.onMessage(b);
+    });
+
 });
