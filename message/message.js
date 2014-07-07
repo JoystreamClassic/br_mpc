@@ -9,57 +9,53 @@ var NUM_MSG = require('../variables').NUM_MSG;
 /**
  * Constructor for message class
  * @param {Number} id
+ * @param {Array of Strings} fieldNames, names of fields
+ * @param {Object|Buffer} arg,
  */
-function message(id) {
+function message(id, fieldNames, arg) {
 
-	this.id = id;
-	
-	/**
-	* Check that id is valid
-	* 1) number
-	* 2) integer
-	* 3) 0 <= id <= 16
-	*/
-	if(!is_int(id) || id < 0 || id >= NUM_MSG) {
-		throw new Error('Invalid message id' + id);
-	}
+    // Save id
+    this.id = id;
+
+    // Quit for empty messages
+    if(fieldNames == 0)
+        return;
+
+    if(arg instanceof Buffer) {
+
+        try {
+            this.fields = bencode.decode(arg);
+        } catch (e) {
+            throw new Error('Invalid encoding: ' + e);
+        }
+
+    } else
+        this.fields = arg;
+
+    // Verify that all required fields are present
+    fieldNames.forEach(function(f) {
+        if(!(f in this.fields))
+            throw new Error('Invalid argument: ' + f + ' field missing');
+    });
+
+    // Verify validity of message
+    this._process_and_validate();
 }
 
 module.exports = message;
 
 /**
- *  Recover message into raw buffer form
+ *  Transform message into raw buffer form
  */
-message.prototype._toBuffer = function() {
+message.prototype.toBuffer = function() {
 	
 	// Return fresh buffer
-	return new Buffer([this.id]);
+    b1 = new Buffer([this.id]);
+
+    // Encode
+    b2 = bencode.encode(this.fields);
+
+    // Combine temporary buffers and return result
+    return Buffer.concat([b1, b2]);
 };
 
-
-/**
- *  Transform raw buffer into message
- */
-message.prototype._parseBuffer = function(buffer, requiredFields) {
-
-    var id = buffer[0];
-
-    var d;
-
-    try {
-        d = bencode.decode(buffer.slice(1,buffer.length));
-    } catch (e) {
-        throw new Error('Invalid encoding: ' + e);
-    }
-
-    // Check that all keys are present
-    requiredFields.forEach(function(f) {
-        if(!(f in d))
-            throw new Error('Invalid argument: ' + f + ' field missing');
-    });
-
-    // Add id field
-    d.id = id;
-
-    return d;
-}

@@ -3,10 +3,7 @@
  * Created by Bedeho Mender on 02.07.2014.
  */
 
-
 var inherits = require('util').inherits;
-
-var bencode = require('bencode');
 
 var message = require('./message');
 var MESSAGE_NAME_TO_ID = require('../variables').MESSAGE_NAME_TO_ID;
@@ -17,30 +14,10 @@ var is_int = require('../utilities').is_int;
  *  Constructor for list class
  *  @param {Buffer} full buffer with raw message, including id
  *  or
- *  @param {Array} currencies
- *  @param {Array} bandwidths
- *  @param {Array} price
- *  @param {Array} fee
+ *  @param {Object} object with fields: currencies, bandwidths, price, fee
  */
-function offer() {
-
-    message.call(this, MESSAGE_NAME_TO_ID.offer);
-
-    if(arguments.length == 0)
-        throw new Error('Invalid argument: To few arguments provided.');
-    else if(arguments.length == 1) {
-
-        // Don't bother checking if (arguments[0] instanceof Buffer), throw new Error('Invalid argument: Buffer needed.');
-
-        var o = this._parseBuffer(arguments[0]);
-
-        if(o.id != MESSAGE_NAME_TO_ID.offer)
-            throw new Error('Invalid argument: Incorrect message id.');
-        else
-            this._set_and_validate(o.currencies,  o.bandwidths, o.price, o.fee, o.minimum);
-
-    } else if(arguments.length >= 5)
-        this._set_and_validate(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
+function offer(arg) {
+    message.call(this, MESSAGE_NAME_TO_ID.offer, ['currencies', 'bandwidths', 'price', 'fee'], arg);
 }
 
 // Inherit from Message class
@@ -49,48 +26,9 @@ inherits(offer, message);
 module.exports = offer;
 
 /**
- *  Transform message into raw buffer form
- */
-offer.prototype.toBuffer = function() {
-
-	// call _toBuffer method in message class
-	b1 = this._toBuffer();
-
-    var o = {
-        'currencies' : this.currencies,
-        'bandwidths' : this.bandwidths,
-        'price' : this.price,
-        'fee' : this.fee,
-        'minimum' : this.minimum
-    };
-
-    // Encode
-    b2 = bencode.encode(o);
-
-    // Combine temporary buffers and return result
-    return Buffer.concat([b1, b2]);
-};
-
-/**
- *  Transform raw buffer into message
- */
-offer.prototype._parseBuffer = function(buffer) {
-    return call(offer.super_, this) .;
-    //_parseBuffer(buffer, ['currencies','bandwidths','price','fee','minimum'])
-    // how to call parent method!
-}
-
-/**
  *  Check that message is valid
  */
-offer.prototype._set_and_validate = function(currencies, bandwidths, price, fee, minimum) {
-
-    // Set properties
-    this.currencies = currencies;
-    this.bandwidths = bandwidths;
-    this.price = price;
-    this.fee = fee;
-    this.minimum = minimum;
+offer.prototype._process_and_validate = function() {
 
     // Derived properties
     this.numberOfCurrencies = this.currencies.length;
@@ -112,7 +50,7 @@ offer.prototype._set_and_validate = function(currencies, bandwidths, price, fee,
     this._schedule_check('price');
     this._schedule_check('fee');
     this._schedule_check('minimum');
-}
+};
 
 offer.prototype._schedule_check = function (field) {
 
@@ -140,4 +78,4 @@ offer.prototype._schedule_check = function (field) {
             });
         }
     }
-}
+};
