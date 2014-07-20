@@ -1,0 +1,37 @@
+{
+    "name": "br_mpc",
+    "description": "Implementation of BEP43 BitTorrent extension, allowing cryptocurrency micro payment channel payments.",
+    "version": "0.0.1",
+    "author": {
+        "name": "Bedeho Mender",
+        "email": "bedeho.mender@gmail.com",
+        "url": "http://github.com/bedeho"
+    },
+    "bugs": {
+        "url": "https://github.com/bedeho/br_mpc/issues"
+    },
+    "homepage": "https://github.com/bedeho/br_mpc",
+    "keywords": [
+        "BitTorrent",
+        "BitCoin",
+        "Cryptocurrency",
+        "BEP43"
+    ],
+    "license": "MIT",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/bedeho/br_mpc.git"
+    },
+    "scripts": {
+        "test": "mocha test/*.js"
+    },
+    "dependencies": {
+        "bittorrent-protocol": "*",
+        "buffer-wrapper" : "*"
+    },
+    "devDependencies": {
+        "chai": "*",
+        "mocha": "*"
+    }
+}

@@ -10,8 +10,6 @@ var message = require('./message');
 var NUM_CURRENCIES = require('../variables').NUM_CURRENCIES;
 
 var is_int = require('../utilities').is_int;
-var readArrayFromBuffer = require('../utilities').readArrayFromBuffer;
-var read2DArrayFromBuffer = require('../utilities').read2DArrayFromBuffer;
 
 /**
  *  Constructor for list class
@@ -102,8 +100,8 @@ offer.prototype._table_check = function (fieldName) {
 /**
  *  Parse raw buffer form
  */
-mesage.prototype._parseBuffer = function(buffer) {
-
+message.prototype._parseBuffer = function(buffer) {
+/*
     // Buffer pointer
     var offset = 0;
 
@@ -207,6 +205,8 @@ mesage.prototype._parseBuffer = function(buffer) {
             'price' : price,
             'fee' : fee,
             'minimum' : minimum};
+
+            */
 };
 
 /**
