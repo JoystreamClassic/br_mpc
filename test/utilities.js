@@ -5,11 +5,14 @@
 var expect = require('chai').expect;
 var is_int = require('../utilities').is_int;
 var flattenArray = require('../utilities').flattenArray;
+var reshapeArray = require('../utilities').reshapeArray;
+
+var fixtures = require('./fixtures/utilities.json');
 
 // Integer
 describe('Utilities', function() {
 
-    describe('is_int', function () {
+    it('is_int', function () {
 
         it('False negatives', function () {
             expect(is_int(1)).to.be.true;
@@ -24,24 +27,50 @@ describe('Utilities', function() {
         });
     });
 
-    describe('flattenArray', function () {
+    it('flattenArray', function () {
 
-        // test array
-        var [
-            [[2, 1, 1], [3, 4, [0, 1]]],
-            [[1, 2, 44 ],[0, 55, 62]]
-        ]
-        ].forEach(function(e) {
+        fixtures.flattenArray.forEach(function (e) {
 
-            var b = flattenArray(e);
+            var flat = flattenArray(e.array);
 
-            expect(b.length).to.be.equal(e.length);
+            // Check that array is properly flattened
+            for(var i = 0; i < flat.length; i++)
+                expect(flat[i]).to.equal(i);
 
+            // Lastly, check that flat array matches size of array
+            expect(flat.length).to.equal(e.size);
         });
 
-
-
     });
+
+    it('reshapeArray', function () {
+
+        fixtures.reshapeArray.forEach(function(e) {
+
+            var shaped = reshapeArray(e.array, e.dimensions);
+
+            // Check structure
+            var next_value = 0;
+            check_structure_and_content(0, shaped);
+
+            function check_structure_and_content(dim, arr) {
+
+                // Check that this dimension has the correct size
+                expect(arr.length).to.equal(e.dimensions[dim]);
+
+                // Verify that it has correct value
+                for(var i = 0;i < arr.length;i++) {
+
+                    // Check if this is last dimension
+                    if(dim == e.dimension - 1)
+                        expect(arr[i]).to.equal(next_value++);
+                    else // if not, check deeper dimension
+                        check_structure_and_content(dim+1,arr[i]);
+                }
+            };
+
+        });
+    })
 
 });
 

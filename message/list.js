@@ -24,7 +24,13 @@ inherits(list, message);
  *  Recover message into raw buffer form
  */
 list.prototype.toBuffer = function() {
-	
-	// call _toBuffer method in message class
-	return this._toBuffer();
+
+    // Create a buffer with space for id
+    var b = new Buffer(1);
+
+    // Save message id
+    b[0] = this._id;
+
+    // Return buffer
+    return b;
 };

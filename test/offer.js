@@ -44,7 +44,6 @@ describe('offer', function () {
         });
     });
 
-
     describe('composition of encoding and decoding is consistent when passed', function () {
 
         fixtures.valid.forEach(function (element) {

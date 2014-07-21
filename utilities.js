@@ -51,6 +51,12 @@ module.exports.reshapeArray = function(arr, dimensions) {
     // Position in array which is presently being read
     var array_read_position = 0;
 
+    // Check that arr has sufficient number of elements
+    var num_element = dimensions.reduce(function(p,i) { return p*i;});
+
+    if(num_element != arr.length)
+        throw new Error("The number of elements in the array does not match the dimensions");
+
     // Return result of recursive call
     return _reshape(0);
 

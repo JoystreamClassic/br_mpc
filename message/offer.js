@@ -4,12 +4,15 @@
  */
 
 var inherits = require('util').inherits;
+var bwrapper = require('buffer-wrapper');
 
 var message = require('./message');
 //var MESSAGE_NAME_TO_ID = require('../variables').MESSAGE_NAME_TO_ID;
 var NUM_CURRENCIES = require('../variables').NUM_CURRENCIES;
 
 var is_int = require('../utilities').is_int;
+var flattenArray = require('../utilities').flattenArray;
+var reshapeArray = require('../utilities').reshapeArray;
 
 /**
  *  Constructor for list class
@@ -101,100 +104,75 @@ offer.prototype._table_check = function (fieldName) {
  *  Parse raw buffer form
  */
 message.prototype._parseBuffer = function(buffer) {
-/*
-    // Buffer pointer
-    var offset = 0;
+
+    // Wrap buffer
+    var wrapper = new bwrapper(buffer);
 
     // id
-    if(buffer.length > offset)
-        id = buffer[offset++];
-    else
+    try {
+        var id = wrapper.readUInt8();
+    } catch (e) {
         throw new Error('Buffer to small: invalid id field');
+    }
 
     // num_currencies
-    if(buffer.length >= offset + 1)
-        num_currencies = buffer[offset++];
-    else
+    try {
+        var num_currencies = wrapper.readUInt8();
+    } catch (e) {
         throw new Error('Buffer to small: invalid num_currencies field');
+    }
 
     // supported_currencies
     try {
-        var supported_currencies = readArrayFromBuffer(buffer, offset, 'UInt32BE', num_currencies);
+        var supported_currencies = wrapper.readUInt8Array(num_currencies);
     } catch (e) {
         throw new Error('Buffer to small: invalid supported_currencies field');
     }
 
     // num_bandwidths
-    if(buffer.length >= offset + 4) {
-        num_bandwidths = buffer.readUInt32BE(offset);
-        offset += 4;
-    } else
+    try {
+        var num_bandwidths = wrapper.readUInt8();
+    } catch (e) {
         throw new Error('Buffer to small: invalid num_bandwidths field');
+    }
 
     // supported_bandwidths
     try {
-        var supported_bandwidths nonono we need to keep offset = readArrayFromBuffer(buffer, offset, 'UInt32BE', num_bandwidths);
+        var supported_bandwidths = wrapper.readUInt8Array(num_bandwidths);
     } catch (e) {
         throw new Error('Buffer to small: invalid supported_bandwidths field');
     }
 
+    // dim to read
+    var dimensions = [num_currencies, num_bandwidths];
 
-
-
-
-
-
-
-
-
-    
     // price
-    if(buffer.length >= ptr + num_currencies*num_bandwidths*4) {
-
-        // read array
-        var price = new Array(num_currencies);
-        for(var i = 0;i < num_currencies;i++){
-
-            price[i] = new Array(num_bandwidths);
-
-            for(var j = 0;j < num_bandwidths;j++, ptr += 4)
-                price[i][j] = buffer.readUInt32BE(ptr);
-        }
-
-    } else
+    var num_elements = num_currencies*num_bandwidths;
+    try {
+        var flat_price_array = wrapper.readUInt32BEArray(num_elements);
+    } catch (e) {
         throw new Error('Buffer to small: invalid price field');
+    }
+
+    var price = reshapeArray(flat_price_array, dimensions);
 
     // fee
-    if(buffer.length >= ptr + num_currencies*num_bandwidths*4) {
-
-        // read array
-        var fee = new Array(num_currencies);
-        for(var i = 0;i < num_currencies;i++){
-
-            fee[i] = new Array(num_bandwidths);
-
-            for(var j = 0;j < num_bandwidths;j++, ptr += 4)
-                fee[i][j] = buffer.readUInt32BE(ptr);
-        }
-
-    } else
+    try {
+        var flat_fee_array = wrapper.readUInt32BEArray(num_elements);
+    } catch (e) {
         throw new Error('Buffer to small: invalid fee field');
+    }
+
+    var fee = reshapeArray(flat_price_array, dimensions);
 
     // minimum
-    if(buffer.length >= ptr + num_currencies*num_bandwidths*4) {
-
-        // read array
-        var minimum = new Array(num_currencies);
-        for(var i = 0;i < num_currencies;i++){
-
-            minimum[i] = new Array(num_bandwidths);
-
-            for(var j = 0;j < num_bandwidths;j++, ptr += 4)
-                minimum[i][j] = buffer.readUInt32BE(ptr);
-        }
-
-    } else
+    try {
+        var flat_minimum_array = wrapper.readUInt32BEArray(num_currencies);
+    } catch (e) {
         throw new Error('Buffer to small: invalid fee field');
+    }
+
+    var minimum = reshapeArray(flat_minimum_array, dimensions);
 
     // Return object with all fields
     return {'id' : id,
@@ -205,8 +183,6 @@ message.prototype._parseBuffer = function(buffer) {
             'price' : price,
             'fee' : fee,
             'minimum' : minimum};
-
-            */
 };
 
 /**
@@ -214,10 +190,7 @@ message.prototype._parseBuffer = function(buffer) {
  */
 message.prototype.toBuffer = function() {
 
-
-
-
-
+    // do later as converse of _parse
 
     /*
      // Return fresh buffer
@@ -229,5 +202,4 @@ message.prototype.toBuffer = function() {
      // Combine temporary buffers and return result
      return Buffer.concat([b1, b2]);
      */
-
 };
