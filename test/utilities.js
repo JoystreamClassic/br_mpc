@@ -6,7 +6,6 @@ var expect = require('chai').expect;
 var is_int = require('../utilities').is_int;
 var flattenArray = require('../utilities').flattenArray;
 var reshapeArray = require('../utilities').reshapeArray;
-
 var fixtures = require('./fixtures/utilities.json');
 
 // Integer

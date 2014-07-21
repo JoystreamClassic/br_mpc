@@ -55,8 +55,8 @@ var offer_fixtures = require('./fixtures/offer.json');
 // Check that br_mpc.onMessage fires correct event
 describe('Message processing works for message', function () {
 
-    // ms Timeout used for all done() callbackss
-    this.timeout(500);
+    // ms Timeout used for all done() call backs
+    //this.timeout(500);
 	
 	// Create extension object
 	var ext = new (br_mpc())();
@@ -76,7 +76,7 @@ describe('Message processing works for message', function () {
     it('offer', function(done){
 
         var args = offer_fixtures.valid[0].arguments;
-        var msg = new offer(args.currencies, args.bandwidths, args.price, args.fee, args.minimum);
+        var msg = new offer(args);
         b = msg.toBuffer();
 
         ext.on('offer',function (m) {

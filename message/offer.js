@@ -7,7 +7,8 @@ var inherits = require('util').inherits;
 var bwrapper = require('buffer-wrapper');
 
 var message = require('./message');
-//var MESSAGE_NAME_TO_ID = require('../variables').MESSAGE_NAME_TO_ID;
+var MESSAGE_NAME_TO_ID = require('../variables').MESSAGE_NAME_TO_ID;
+
 var NUM_CURRENCIES = require('../variables').NUM_CURRENCIES;
 
 var is_int = require('../utilities').is_int;
@@ -23,7 +24,7 @@ var reshapeArray = require('../utilities').reshapeArray;
 function offer(arg) {
 
     // Call parent class constructor
-    message.call(this, arg);
+    message.call(this, MESSAGE_NAME_TO_ID.offer, arg);
 
     // Do message verification and processing
     this._validate_and_process();
@@ -40,17 +41,23 @@ module.exports = offer;
 offer.prototype._validate_and_process = function() {
 
     // Do base message validation
-    this.__proto__.__proto__._validate_and_process();
+    this.__proto__.__proto__._validate_and_process.call(this, MESSAGE_NAME_TO_ID.offer);
 
     // Verify that all required fields are present
-    ['num_currencies', 'supported_currencies', 'num_bandwidths', 'supported_bandwidths', 'price', 'fee', 'minimum'].forEach(function(f) {
+    var fields = ['num_currencies', 'currencies', 'num_bandwidths', 'bandwidths', 'price', 'fee', 'minimum'];
+    for(var i in fields) {
+        var f = fields[i];
         if(!this[f])
             throw new Error('Field missing: ' + f);
-    });
+    }
 
-    // Derived properties
-    this.numberOfCurrencies = this.currencies.length;
-    this.numberOfBandwidths = this.bandwidths.length;
+    // Compare num_currencies and currencies.length
+    if(this.num_currencies != this.currencies.length)
+        throw new Error('Field incompatibility: num_currencies (' + this.num_currencies + ') != currencies.length (' + this.currencies.length);
+
+    // Compare num_bandwidths and bandwidths.length
+    if(this.num_bandwidths != this.bandwidths.length)
+        throw new Error('Field incompatibility: num_bandwidths (' + this.num_bandwidths + ') != bandwidths.length (' + this.bandwidths.length);
 
     // Only includes valid currencies
     this.currencies.forEach(function (c) {
@@ -79,17 +86,17 @@ offer.prototype._table_check = function (fieldName) {
     if(!Array.isArray(table))
         throw new Error('Invalid ' + fieldName +' field: not of type Array');
 
-    if(table.length != this.numberOfCurrencies)
+    if(table.length != this.num_currencies)
         throw new Error('Invalid ' + fieldName +' field: incorrect number of currencies');
 
     // Each field has, for each currency, one value per speed
-    for(var i = 0;i < this.numberOfCurrencies;i++) {
+    for(var i = 0;i < this.num_currencies;i++) {
 
         var schedule = table[i];
 
         if(!Array.isArray(schedule))
             throw new Error('Invalid ' + fieldName +'[' + i + ']: not of type Array');
-        else if(schedule.length != this.numberOfBandwidths)
+        else if(schedule.length != this.num_bandwidths)
             throw new Error('Invalid ' + fieldName +'[' + i + ']: incorrect number of bandwidths');
         else {
             schedule.forEach(function(n) {
@@ -103,7 +110,7 @@ offer.prototype._table_check = function (fieldName) {
 /**
  *  Parse raw buffer form
  */
-message.prototype._parseBuffer = function(buffer) {
+offer.prototype._parseBuffer = function(buffer) {
 
     // Wrap buffer
     var wrapper = new bwrapper(buffer);
@@ -122,11 +129,11 @@ message.prototype._parseBuffer = function(buffer) {
         throw new Error('Buffer to small: invalid num_currencies field');
     }
 
-    // supported_currencies
+    // currencies
     try {
-        var supported_currencies = wrapper.readUInt8Array(num_currencies);
+        var currencies = wrapper.readUInt8Array(num_currencies);
     } catch (e) {
-        throw new Error('Buffer to small: invalid supported_currencies field');
+        throw new Error('Buffer to small: invalid currencies field');
     }
 
     // num_bandwidths
@@ -136,18 +143,18 @@ message.prototype._parseBuffer = function(buffer) {
         throw new Error('Buffer to small: invalid num_bandwidths field');
     }
 
-    // supported_bandwidths
+    // bandwidths
     try {
-        var supported_bandwidths = wrapper.readUInt8Array(num_bandwidths);
+        var bandwidths = wrapper.readUInt32BEArray(num_bandwidths);
     } catch (e) {
-        throw new Error('Buffer to small: invalid supported_bandwidths field');
+        throw new Error('Buffer to small: invalid bandwidths field');
     }
 
     // dim to read
     var dimensions = [num_currencies, num_bandwidths];
 
     // price
-    var num_elements = num_currencies*num_bandwidths;
+    var num_elements = num_currencies*num_bandwidths; // also used for fee table
     try {
         var flat_price_array = wrapper.readUInt32BEArray(num_elements);
     } catch (e) {
@@ -177,9 +184,9 @@ message.prototype._parseBuffer = function(buffer) {
     // Return object with all fields
     return {'id' : id,
             'num_currencies' : num_currencies,
-            'supported_currencies' : supported_currencies,
+            'currencies' : currencies,
             'num_bandwidths' : num_bandwidths,
-            'supported_bandwidths' : supported_bandwidths,
+            'bandwidths' : bandwidths,
             'price' : price,
             'fee' : fee,
             'minimum' : minimum};
@@ -188,18 +195,27 @@ message.prototype._parseBuffer = function(buffer) {
 /**
  *  Transform message into raw buffer form
  */
-message.prototype.toBuffer = function() {
+offer.prototype.toBuffer = function() {
 
-    // do later as converse of _parse
+    // Calculate net byte size of message
+    var TOTAL_BYTE_SIZE = 1 + 1 + this.num_currencies + 1 + this.num_bandwidths + 4*4*this.num_currencies*this.num_bandwidths;
 
-    /*
-     // Return fresh buffer
-     b1 = new Buffer([this.id]);
+    // Create buffer
+    var buffer = new Buffer(TOTAL_BYTE_SIZE);
 
-     // Encode
-     b2 = bencode.encode(this.fields);
+    // Wrap buffer
+    var wrapper = new bwrapper(buffer);
 
-     // Combine temporary buffers and return result
-     return Buffer.concat([b1, b2]);
-     */
+    // Write fields
+    wrapper.writeUInt8(this.id);
+    wrapper.writeUInt8(this.num_currencies);
+    wrapper.writeUInt8Array(flattenArray(this.currencies));
+    wrapper.writeUInt8(this.num_bandwidths);
+    wrapper.writeUInt32BEArray(flattenArray(this.bandwidths));
+    wrapper.writeUInt32BEArray(flattenArray(this.price));
+    wrapper.writeUInt32BEArray(flattenArray(this.fee));
+    wrapper.writeUInt32BEArray(flattenArray(this.minimum));
+
+    // Return buffer
+    return buffer;
 };

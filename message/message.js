@@ -12,11 +12,16 @@ var NUM_MSG = require('../variables').NUM_MSG;
  */
 function message(id, arg) {
 
+    // Save id field explicitly
+    this.id = id;
+
     // Parse if a argument is of type Buffers
     if(Buffer.isBuffer(arg))
         fields = this._parseBuffer(arg);
-    else
+    else if(arg)
         fields = arg;
+    else
+        return; // no fields provided;
 
     // Save in object
     for(var k in fields)
