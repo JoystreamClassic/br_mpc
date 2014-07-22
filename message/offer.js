@@ -23,6 +23,10 @@ var reshapeArray = require('../utilities').reshapeArray;
  */
 function offer(arg) {
 
+    // Check that we have input
+    if(!arg)
+        throw new Error('Invalid argument: To few arguments provided.');
+
     // Call parent class constructor
     message.call(this, MESSAGE_NAME_TO_ID.offer, arg);
 
@@ -174,7 +178,7 @@ offer.prototype._parseBuffer = function(buffer) {
 
     // minimum
     try {
-        var flat_minimum_array = wrapper.readUInt32BEArray(num_currencies);
+        var flat_minimum_array = wrapper.readUInt32BEArray(num_elements);
     } catch (e) {
         throw new Error('Buffer to small: invalid fee field');
     }
@@ -198,7 +202,7 @@ offer.prototype._parseBuffer = function(buffer) {
 offer.prototype.toBuffer = function() {
 
     // Calculate net byte size of message
-    var TOTAL_BYTE_SIZE = 1 + 1 + this.num_currencies + 1 + this.num_bandwidths + 4*4*this.num_currencies*this.num_bandwidths;
+    var TOTAL_BYTE_SIZE = 1 + 1 + this.num_currencies + 1 + 4*this.num_bandwidths + 3*4*this.num_currencies*this.num_bandwidths;
 
     // Create buffer
     var buffer = new Buffer(TOTAL_BYTE_SIZE);
@@ -212,6 +216,7 @@ offer.prototype.toBuffer = function() {
     wrapper.writeUInt8Array(flattenArray(this.currencies));
     wrapper.writeUInt8(this.num_bandwidths);
     wrapper.writeUInt32BEArray(flattenArray(this.bandwidths));
+
     wrapper.writeUInt32BEArray(flattenArray(this.price));
     wrapper.writeUInt32BEArray(flattenArray(this.fee));
     wrapper.writeUInt32BEArray(flattenArray(this.minimum));

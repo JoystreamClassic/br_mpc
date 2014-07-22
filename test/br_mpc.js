@@ -56,7 +56,7 @@ var offer_fixtures = require('./fixtures/offer.json');
 describe('Message processing works for message', function () {
 
     // ms Timeout used for all done() call backs
-    //this.timeout(500);
+    this.timeout(500);
 	
 	// Create extension object
 	var ext = new (br_mpc())();

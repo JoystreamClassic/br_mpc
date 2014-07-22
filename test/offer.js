@@ -10,13 +10,13 @@ var fixtures = require('./fixtures/offer.json');
 // This fixture file only test .price explicitly, but since same checks
 // on the two other fields, that is fine for now.
 
-describe.skip('offer', function () {
+describe('offer', function () {
 
-    var fn = function (args) {
+    var fn = function (arg) {
 
         // function which chai will call
         return function () {
-            return new offer(args.currencies, args.bandwidths, args.price, args.fee, args.minimum);
+            return new offer(arg);
         };
     };
 
@@ -34,7 +34,7 @@ describe.skip('offer', function () {
         });
     });
 
-    describe('constructor does not throw when passed', function () {
+    describe.skip('constructor does not throw when passed', function () {
 
         fixtures.valid.forEach(function (element) {
 
@@ -44,7 +44,7 @@ describe.skip('offer', function () {
         });
     });
 
-    describe('composition of encoding and decoding is consistent when passed', function () {
+    describe.skip('composition of encoding and decoding is consistent when passed', function () {
 
         fixtures.valid.forEach(function (element) {
 
