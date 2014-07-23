@@ -34,7 +34,7 @@ describe('offer', function () {
         });
     });
 
-    describe.skip('constructor does not throw when passed', function () {
+    describe('constructor does not throw when passed', function () {
 
         fixtures.valid.forEach(function (element) {
 
@@ -44,15 +44,20 @@ describe('offer', function () {
         });
     });
 
-    describe.skip('composition of encoding and decoding is consistent when passed', function () {
+    describe('composition of encoding and decoding is consistent when passed', function () {
 
         fixtures.valid.forEach(function (element) {
 
             it(element.description, function () {
 
+                // Create message from arguments
                 var msg = fn(element.arguments)();
 
-                expect(new offer(msg.toBuffer())).to.deep.equal(msg);
+                // Create message from raw buffer version
+                var o = new offer(msg.toBuffer());
+
+                // Compare them
+                expect(o.equals(msg)).to.be.true;
             });
         });
     });

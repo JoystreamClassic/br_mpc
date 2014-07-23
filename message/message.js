@@ -32,16 +32,23 @@ function message(id, arg) {
  *  Check that message is valid
  *  @param {Number} expectedId, the message id expected by the extending class
  */
-message.prototype._validate_and_process = function(expectedId) {
+message.prototype._validate_and_process = function(expectedId, expectedfields) {
 
     // Check that id field is present
-    if(!this.id)
+    if(!('id' in this))
         throw new Error('Field missing: id');
 
     // Check for correct id value
     if(this.id != expectedId)
         throw new Error('Incorrect message id provided, expected ' + expectedId + ', but got: ' + this.id);
 
-}
+    // Check that all expected fields are present
+    for(var i in expectedfields) {
+        var f = expectedfields[i];
+        if(!this.hasOwnProperty(f))
+            throw new Error('Field missing: ' + f);
+    }
+
+};
 
 module.exports = message;

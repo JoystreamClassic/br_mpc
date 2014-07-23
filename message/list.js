@@ -29,7 +29,7 @@ list.prototype.toBuffer = function() {
     var b = new Buffer(1);
 
     // Save message id
-    b[0] = this._id;
+    b[0] = this.id;
 
     // Return buffer
     return b;

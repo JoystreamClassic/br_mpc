@@ -81,3 +81,30 @@ module.exports.reshapeArray = function(arr, dimensions) {
         return result;
     }
 };
+
+/**
+ * Compare two multidimensional arrays
+ * @param {Array} arr1
+ * @param {Array} arr2
+ */
+module.exports.multiDimArrayEquality = function f(arr1, arr2) {
+
+    // Compare length
+    if(arr1.length != arr2.length)
+        return false;
+
+    // Compare elements
+    for(var i = 0;i < arr1.length;i++) {
+
+        var elm1 = arr1[i];
+        var elm2 = arr2[i];
+
+        if(Array.isArray(elm1) && Array.isArray(elm2))
+            if(!f(elm1,elm2)) return false;
+        else
+            if(elm1 != elm2) return false;
+    }
+
+    // If we got here, they are equal
+    return true;
+};

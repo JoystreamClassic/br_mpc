@@ -14,6 +14,7 @@ var NUM_CURRENCIES = require('../variables').NUM_CURRENCIES;
 var is_int = require('../utilities').is_int;
 var flattenArray = require('../utilities').flattenArray;
 var reshapeArray = require('../utilities').reshapeArray;
+var multiDimArrayEquality = require('../utilities').multiDimArrayEquality;
 
 /**
  *  Constructor for list class
@@ -45,15 +46,7 @@ module.exports = offer;
 offer.prototype._validate_and_process = function() {
 
     // Do base message validation
-    this.__proto__.__proto__._validate_and_process.call(this, MESSAGE_NAME_TO_ID.offer);
-
-    // Verify that all required fields are present
-    var fields = ['num_currencies', 'currencies', 'num_bandwidths', 'bandwidths', 'price', 'fee', 'minimum'];
-    for(var i in fields) {
-        var f = fields[i];
-        if(!this[f])
-            throw new Error('Field missing: ' + f);
-    }
+    this.__proto__.__proto__._validate_and_process.call(this, MESSAGE_NAME_TO_ID.offer, ['num_currencies', 'currencies', 'num_bandwidths', 'bandwidths', 'price', 'fee', 'minimum']);
 
     // Compare num_currencies and currencies.length
     if(this.num_currencies != this.currencies.length)
@@ -223,4 +216,36 @@ offer.prototype.toBuffer = function() {
 
     // Return buffer
     return buffer;
+};
+
+/**
+ *  Compare offer messages
+ *  {offer} obj, note: we never actually check that object has necessary fields
+ */
+offer.prototype.equals = function (obj) {
+
+    // id
+    if(this.id != obj.id)
+        return false;
+
+    // num_currencies
+    if(this.num_currencies != obj.num_currencies)
+        return false;
+
+    // currencies
+    for(var i = 0;i < this.num_currencies;i++)
+        if(this.currencies[i] != obj.currencies[i])
+            return false;
+
+    // num_bandwidths
+    if(this.num_bandwidths != obj.num_bandwidths)
+        return false;
+
+    // bandwidths
+    for(var i = 0;i < this.num_bandwidths;i++)
+        if(this.bandwidths[i] != obj.bandwidths[i])
+            return false;
+
+    // Check the remaining 2d arrays
+    return multiDimArrayEquality(this.price,obj.price) && multiDimArrayEquality(this.fee,obj.fee) && multiDimArrayEquality(this.minmum,obj.minimum);
 };

@@ -6,9 +6,10 @@ var expect = require('chai').expect;
 var is_int = require('../utilities').is_int;
 var flattenArray = require('../utilities').flattenArray;
 var reshapeArray = require('../utilities').reshapeArray;
+var multiDimArrayEquality = require('../utilities').multiDimArrayEquality;
+
 var fixtures = require('./fixtures/utilities.json');
 
-// Integer
 describe('Utilities', function() {
 
     it('is_int', function () {
@@ -33,7 +34,7 @@ describe('Utilities', function() {
             var flat = flattenArray(e.array);
 
             // Check that array is properly flattened
-            for(var i = 0; i < flat.length; i++)
+            for (var i = 0; i < flat.length; i++)
                 expect(flat[i]).to.equal(i);
 
             // Lastly, check that flat array matches size of array
@@ -44,7 +45,7 @@ describe('Utilities', function() {
 
     it('reshapeArray', function () {
 
-        fixtures.reshapeArray.forEach(function(e) {
+        fixtures.reshapeArray.forEach(function (e) {
 
             var shaped = reshapeArray(e.array, e.dimensions);
 
@@ -58,18 +59,28 @@ describe('Utilities', function() {
                 expect(arr.length).to.equal(e.dimensions[dim]);
 
                 // Verify that it has correct value
-                for(var i = 0;i < arr.length;i++) {
+                for (var i = 0; i < arr.length; i++) {
 
                     // Check if this is last dimension
-                    if(dim == e.dimension - 1)
+                    if (dim == e.dimension - 1)
                         expect(arr[i]).to.equal(next_value++);
                     else // if not, check deeper dimension
-                        check_structure_and_content(dim+1,arr[i]);
+                        check_structure_and_content(dim + 1, arr[i]);
                 }
             };
 
         });
     })
 
-});
+    it('multiDimArrayEquality', function () {
 
+        fixtures.multiDimArrayEquality.forEach(function (e) {
+
+            // Result of comparison
+            var eq = multiDimArrayEquality(e.arr1, e.arr2);
+
+            // Assert correct output
+            expect(eq).to.equal(e.result);
+        });
+    });
+});
