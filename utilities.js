@@ -99,10 +99,13 @@ module.exports.multiDimArrayEquality = function f(arr1, arr2) {
         var elm1 = arr1[i];
         var elm2 = arr2[i];
 
-        if(Array.isArray(elm1) && Array.isArray(elm2))
-            if(!f(elm1,elm2)) return false;
-        else
-            if(elm1 != elm2) return false;
+        if (Array.isArray(elm1) && Array.isArray(elm2)) {
+            if (!f(elm1, elm2))
+                return false;
+        } else {
+            if (elm1 != elm2)
+                return false;
+        }
     }
 
     // If we got here, they are equal

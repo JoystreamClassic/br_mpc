@@ -167,7 +167,7 @@ offer.prototype._parseBuffer = function(buffer) {
         throw new Error('Buffer to small: invalid fee field');
     }
 
-    var fee = reshapeArray(flat_price_array, dimensions);
+    var fee = reshapeArray(flat_fee_array, dimensions);
 
     // minimum
     try {
@@ -247,5 +247,10 @@ offer.prototype.equals = function (obj) {
             return false;
 
     // Check the remaining 2d arrays
-    return multiDimArrayEquality(this.price,obj.price) && multiDimArrayEquality(this.fee,obj.fee) && multiDimArrayEquality(this.minmum,obj.minimum);
+    var equal_price = multiDimArrayEquality(this.price,obj.price);
+    var equal_fee = multiDimArrayEquality(this.fee,obj.fee);
+    var equal_minimum = multiDimArrayEquality(this.minimum,obj.minimum);
+
+    // Return conjunctive test
+    return equal_price && equal_fee && equal_minimum;
 };

@@ -53,8 +53,11 @@ describe('offer', function () {
                 // Create message from arguments
                 var msg = fn(element.arguments)();
 
+                // Create raw buffer version
+                var b = msg.toBuffer();
+
                 // Create message from raw buffer version
-                var o = new offer(msg.toBuffer());
+                var o = new offer(b);
 
                 // Compare them
                 expect(o.equals(msg)).to.be.true;

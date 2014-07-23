@@ -80,7 +80,7 @@ describe('Utilities', function() {
             var eq = multiDimArrayEquality(e.arr1, e.arr2);
 
             // Assert correct output
-            expect(eq).to.equal(e.result);
+            expect(eq).to.equal(!!e.result);
         });
     });
 });
