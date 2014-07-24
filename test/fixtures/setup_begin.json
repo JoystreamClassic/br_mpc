@@ -1,0 +1,55 @@
+{
+   "invalid":[
+		{
+			"description":"invalid currency",
+			"arguments": {
+                "currency":67,
+                "bandwidth":1,
+                "fee":1,
+                "lock_time":1
+				},
+			"exception":"Invalid currency: 67"
+		},
+		{
+             "description":"invalid bandwidth",
+             "arguments":{
+                 "currency":1,
+                 "bandwidth":-3,
+                 "fee":1,
+                 "lock_time":1
+                },
+             "exception":"Invalid bandwidth: -3"
+		},
+		{
+            "description":"invalid fee",
+            "arguments":{
+                "currency":1,
+                "bandwidth":1,
+                "fee":-3,
+                "lock_time":1
+            },
+            "exception":"Invalid fee: -3"
+		},
+		{
+            "description":"invalid lock_time",
+            "arguments":{
+                "currency":1,
+                "bandwidth":1,
+                "fee":1,
+                "lock_time":-3
+            },
+            "exception":"Invalid lock_time: -3"
+		}
+   ],
+   "valid":[
+		{
+            "description":"classic valid message",
+            "arguments":{
+                "currency":1,
+                "bandwidth":1,
+                "fee":1,
+                "lock_time":1
+            }
+		}
+   ]
+}

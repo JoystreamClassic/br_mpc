@@ -48,15 +48,20 @@ describe('Extended handshake message processing', function () {
     });
 });
 
+// messages
 var list = require('../message/list');
 var offer = require('../message/offer');
+var setup_begin = require('../message/setup_begin');
+
+// fixtures
 var offer_fixtures = require('./fixtures/offer.json');
+var setup_begin_fixtures = require('./fixtures/setup_begin.json');
 
 // Check that br_mpc.onMessage fires correct event
 describe('Message processing works for message', function () {
 
     // ms Timeout used for all done() call backs
-    this.timeout(500);
+    //this.timeout(500);
 	
 	// Create extension object
 	var ext = new (br_mpc())();
@@ -85,6 +90,20 @@ describe('Message processing works for message', function () {
         });
 
         ext.onMessage(b);
+    });
+
+    it('setup_begin', function(done){
+
+         var args = setup_begin_fixtures.valid[0].arguments;
+         var msg = new setup_begin(args);
+         var b = msg.toBuffer();
+
+         ext.on('setup_begin', function(m) {
+             expect(true).to.be.true;
+             done();
+         });
+
+         ext.onMessage(b);
     });
 
 });

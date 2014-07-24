@@ -3,8 +3,7 @@
  * Created by Bedeho Mender on 02.07.2014.
  */
 
-var is_int = require('../utilities').is_int;
-var NUM_MSG = require('../variables').NUM_MSG;
+var bwrapper = require('buffer-wrapper');
 
 /**
  * Constructor for message class
@@ -19,7 +18,7 @@ function message(id, arg) {
     if(Buffer.isBuffer(arg)) {
 
         // Wrap buffer
-        var wrapper = new bwrapper(buffer);
+        var wrapper = new bwrapper(arg);
 
         // id
         try {
@@ -28,7 +27,7 @@ function message(id, arg) {
             throw new Error('Buffer to small: invalid id field');
         }
 
-        fields = this._parseBuffer(arg);
+        var fields = this._parseBuffer(wrapper);
         fields['id'] = id;
 
     } else if(arg)

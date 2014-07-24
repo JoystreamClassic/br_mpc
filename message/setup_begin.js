@@ -6,9 +6,8 @@
 var inherits = require('util').inherits;
 var bwrapper = require('buffer-wrapper');
 
-var messager = require('./message');
+var message = require('./message');
 var MESSAGE_NAME_TO_ID = require('../variables').MESSAGE_NAME_TO_ID;
-
 var NUM_CURRENCIES = require('../variables').NUM_CURRENCIES;
 
 var is_int = require('../utilities').is_int;
@@ -48,7 +47,7 @@ setup_begin.prototype._validate_and_process = function() {
     this.__proto__.__proto__._validate_and_process.call(this, MESSAGE_NAME_TO_ID.setup_begin, ['currency','bandwidth','fee','lock_time']);
 
     // currency
-    if (!(is_int(this.currency) && c < NUM_CURRENCIES))
+    if (!(is_int(this.currency) && this.currency < NUM_CURRENCIES))
         throw new Error('Invalid currency: ' + this.currency);
 
     // bandwidth
@@ -68,13 +67,13 @@ setup_begin.prototype._validate_and_process = function() {
 /**
  *  Parse wrapped raw buffer which is positioned after id field
  */
-setup_begin.prototype._parseBuffer = function(buffer) {
+setup_begin.prototype._parseBuffer = function(wrapper) {
 
     // currency
     try {
         var currency = wrapper.readUInt8();
     } catch (e) {
-        throw new Error('Buffer to small: invalid num_currencies field');
+        throw new Error('Buffer to small: invalid currency field');
     }
 
     // bandwidth
