@@ -105,19 +105,9 @@ offer.prototype._table_check = function (fieldName) {
 };
 
 /**
- *  Parse raw buffer form
+ *  Parse wrapped raw buffer which is positioned after id field
  */
-offer.prototype._parseBuffer = function(buffer) {
-
-    // Wrap buffer
-    var wrapper = new bwrapper(buffer);
-
-    // id
-    try {
-        var id = wrapper.readUInt8();
-    } catch (e) {
-        throw new Error('Buffer to small: invalid id field');
-    }
+offer.prototype._parseBuffer = function(wrapper) {
 
     // num_currencies
     try {
@@ -179,8 +169,7 @@ offer.prototype._parseBuffer = function(buffer) {
     var minimum = reshapeArray(flat_minimum_array, dimensions);
 
     // Return object with all fields
-    return {'id' : id,
-            'num_currencies' : num_currencies,
+    return {'num_currencies' : num_currencies,
             'currencies' : currencies,
             'num_bandwidths' : num_bandwidths,
             'bandwidths' : bandwidths,

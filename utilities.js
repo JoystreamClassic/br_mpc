@@ -17,6 +17,14 @@ module.exports.is_int = function(value) {
 };
 
 /**
+ * Check object is a positive integer
+ * @param  {Number} value
+ */
+module.exports.is_positive_int = function(value) {
+    return (value > 0) && module.exports.is_int(value);
+};
+
+/**
  * Flatten a multidimensional array
  * @param  {Array} arr, the array to flatten
  */

@@ -16,9 +16,22 @@ function message(id, arg) {
     this.id = id;
 
     // Parse if a argument is of type Buffers
-    if(Buffer.isBuffer(arg))
+    if(Buffer.isBuffer(arg)) {
+
+        // Wrap buffer
+        var wrapper = new bwrapper(buffer);
+
+        // id
+        try {
+            var id = wrapper.readUInt8();
+        } catch (e) {
+            throw new Error('Buffer to small: invalid id field');
+        }
+
         fields = this._parseBuffer(arg);
-    else if(arg)
+        fields['id'] = id;
+
+    } else if(arg)
         fields = arg;
     else
         return; // no fields provided;
