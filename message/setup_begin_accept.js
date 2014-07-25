@@ -1,5 +1,5 @@
 /**
- * The subclass for setup_begin message
+ * The subclass for setup_begin_accept message
  * Created by Bedeho Mender on 02.07.2014.
  */
 
@@ -8,7 +8,6 @@ var bwrapper = require('buffer-wrapper');
 
 var message = require('./message');
 var MESSAGE_NAME_TO_ID = require('../variables').MESSAGE_NAME_TO_ID;
-var NUM_CURRENCIES = require('../variables').NUM_CURRENCIES;
 
 var is_int = require('../utilities').is_int;
 var is_positive_int = require('../utilities').is_positive_int;
@@ -18,34 +17,35 @@ var is_positive_int = require('../utilities').is_positive_int;
  *  Constructor for list class
  *  @param {Buffer} full buffer with raw message (including id)
  *  or
- *  @param {Object} object with fields: currency,bandwidth,fee,lock_time
+ *  @param {Object} object with fields: previous_output_h,previous_output_i,pk_1,pk_2,pk_3,pk_4
  */
-function setup_begin(arg) {
+function setup_begin_accept(arg) {
 
     // Check that we have input
     if(!arg)
         throw new Error('Invalid argument: To few arguments provided.');
 
     // Call parent class constructor
-    message.call(this, MESSAGE_NAME_TO_ID.setup_begin, arg);
+    message.call(this, MESSAGE_NAME_TO_ID.setup_begin_accept, arg);
 
     // Do message verification and processing
     this._validate_and_process();
 }
 
 // Inherit from Message class
-inherits(setup_begin, message);
+inherits(setup_begin_accept, message);
 
-module.exports = setup_begin;
+module.exports = setup_begin_accept;
 
 /**
  *  Check that message is valid
  */
-setup_begin.prototype._validate_and_process = function() {
+setup_begin_accept.prototype._validate_and_process = function() {
 
     // Do base message validation
-    this.__proto__.__proto__._validate_and_process.call(this, MESSAGE_NAME_TO_ID.setup_begin, ['currency','bandwidth','fee','lock_time']);
+    this.__proto__.__proto__._validate_and_process.call(this, MESSAGE_NAME_TO_ID.setup_begin_accept, ['previous_output_h','previous_output_i','pk_1','pk_2','pk_3','pk_4']);
 
+    /*
     // currency
     if (!(is_int(this.currency) && this.currency < NUM_CURRENCIES))
         throw new Error('Invalid currency: ' + this.currency);
@@ -62,12 +62,13 @@ setup_begin.prototype._validate_and_process = function() {
     if (!is_positive_int(this.lock_time))
         throw new Error('Invalid lock_time: ' + this.lock_time);
 
+*/
 };
 
 /**
  *  Parse wrapped raw buffer which is positioned after id field
  */
-setup_begin.prototype._parseBuffer = function(wrapper) {
+setup_begin_accept.prototype._parseBuffer = function(wrapper) {
 
     // currency
     try {
@@ -107,7 +108,7 @@ setup_begin.prototype._parseBuffer = function(wrapper) {
 /**
  *  Transform message into raw buffer form
  */
-setup_begin.prototype.toBuffer = function() {
+setup_begin_accept.prototype.toBuffer = function() {
 
     // Calculate net byte size of message
     var TOTAL_BYTE_SIZE = 1 + 1 + 3*4;
@@ -130,10 +131,10 @@ setup_begin.prototype.toBuffer = function() {
 };
 
 /**
- *  Compare setup_begin messages
- *  {setup_begin} obj, note: we never actually check that object has necessary fields
+ *  Compare setup_begin_accept messages
+ *  {setup_begin_accept} obj, note: we never actually check that object has necessary fields
  */
-setup_begin.prototype.equals = function (obj) {
+setup_begin_accept.prototype.equals = function (obj) {
 
     // id
     if(this.id != obj.id)

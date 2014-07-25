@@ -18,7 +18,7 @@ var multiDimArrayEquality = require('../utilities').multiDimArrayEquality;
 
 /**
  *  Constructor for list class
- *  @param {Buffer} full buffer with raw message (excluding id)
+ *  @param {Buffer} full buffer with raw message (including id)
  *  or
  *  @param {Object} object with fields: currencies, bandwidths, price, fee, minimum
  */
