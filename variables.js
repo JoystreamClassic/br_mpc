@@ -50,3 +50,8 @@ for(var i = 0;i < CURRENCY_ID_TO_NAME.length;i++)
     CURRENCY_NAME_TO_ID[CURRENCY_ID_TO_NAME[i]] = i;
 
 module.exports.CURRENCY_NAME_TO_ID = CURRENCY_NAME_TO_ID;
+
+// Transaction field sizes
+module.exports.PKH_SIZE = 25;
+module.exports.TX_HASH_SIZE = 32;
+//module.exports.TX_OUTPUT_INDEX_SIZE = 4;

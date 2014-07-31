@@ -9,16 +9,26 @@ var bwrapper = require('buffer-wrapper');
 var message = require('./message');
 var MESSAGE_NAME_TO_ID = require('../variables').MESSAGE_NAME_TO_ID;
 var NUM_CURRENCIES = require('../variables').NUM_CURRENCIES;
+var PKH_SIZE = require('../variables').PKH_SIZE;
+var TX_HASH_SIZE = require('../variables').TX_HASH_SIZE;
 
 var is_int = require('../utilities').is_int;
 var is_positive_int = require('../utilities').is_positive_int;
-
+var equal_arrays = require('../utilities').equal_arrays;
 
 /**
  *  Constructor for list class
  *  @param {Buffer} full buffer with raw message (including id)
  *  or
- *  @param {Object} object with fields: currency,bandwidth,fee,lock_time
+ *  @param {Object} object with fields:
+ *  {Number} currency
+ *  {Number} bandwidth
+ *  {Number} fee
+ *  {Number} lock_time
+ *  {Buffer|String} input_hash
+ *  {Number} input_i
+ *  {Buffer|String} pkh_contract_refund
+ *  {Buffer|String} pkh_contract_multisig
  */
 function setup_begin(arg) {
 
@@ -44,7 +54,7 @@ module.exports = setup_begin;
 setup_begin.prototype._validate_and_process = function() {
 
     // Do base message validation
-    this.__proto__.__proto__._validate_and_process.call(this, MESSAGE_NAME_TO_ID.setup_begin, ['currency','bandwidth','fee','lock_time']);
+    this.__proto__.__proto__._validate_and_process.call(this, MESSAGE_NAME_TO_ID.setup_begin, ['currency','bandwidth','fee','lock_time','input_hash','input_i','pkh_contract_refund','pkh_contract_multisig']);
 
     // currency
     if (!(is_int(this.currency) && this.currency < NUM_CURRENCIES))
@@ -62,6 +72,36 @@ setup_begin.prototype._validate_and_process = function() {
     if (!is_positive_int(this.lock_time))
         throw new Error('Invalid lock_time: ' + this.lock_time);
 
+    // input_hash: can be either buffer or hex string,
+    // if string, substitute with Buffer instead
+    if(typeof this.input_hash === 'string')
+        this.input_hash = new Buffer(this.input_hash, 'hex');
+
+    // check validity
+    if (!Buffer.isBuffer(this.input_hash) || this.input_hash.length != TX_HASH_SIZE)
+        throw new Error('Invalid input_hash: ' + this.input_hash);
+
+    // input_i
+    if(!is_positive_int(this.input_i))
+        throw new Error('Invalid input_i: ' + this.input_i);
+
+    // pkh_refund: can be either buffer or hex string,
+    // if string, substitute with Buffer instead
+    if(typeof this.pkh_contract_refund === 'string')
+        this.pkh_contract_refund = new Buffer(this.pkh_contract_refund, 'hex');
+
+    // check validity
+    if(!Buffer.isBuffer(this.pkh_contract_refund) || this.pkh_contract_refund.length != PKH_SIZE)
+        throw new Error('Invalid pkh_contract_refund: ' + this.pkh_contract_refund);
+
+    // pkh_contract_multisig: can be either buffer or hex string
+    // if string, substitute with Buffer instead
+    if(typeof this.pkh_contract_multisig === 'string')
+        this.pkh_contract_multisig = new Buffer(this.pkh_contract_multisig, 'hex');
+
+    // check validity
+    if(!Buffer.isBuffer(this.pkh_contract_multisig) || this.pkh_contract_multisig.length != PKH_SIZE)
+        throw new Error('Invalid pkh_contract_multisig: ' + this.pkh_contract_multisig);
 };
 
 /**
@@ -97,11 +137,42 @@ setup_begin.prototype._parseBuffer = function(wrapper) {
         throw new Error('Buffer to small: invalid lock_time field');
     }
 
+    // input_hash
+    try {
+        var input_hash = wrapper.readBuffer(TX_HASH_SIZE);
+    } catch (e) {
+        throw new Error('Buffer to small: invalid input_hash field');
+    }
+
+    // input_i
+    try {
+        var input_i = wrapper.readUInt32BE();
+    } catch (e) {
+        throw new Error('Buffer to small: invalid input_i field');
+    }
+
+    // pkh_contract_refund
+    try {
+        var pkh_contract_refund = wrapper.readBuffer(PKH_SIZE);
+    } catch (e) {
+        throw new Error('Buffer to small: invalid pkh_contract_refund field');
+    }
+
+    // pkh_contract_multisig
+    try {
+        var pkh_contract_multisig = wrapper.readBuffer(PKH_SIZE);
+    } catch (e) {
+        throw new Error('Buffer to small: invalid pkh_contract_multisig field');
+    }
     // Return object with all fields
     return {'currency' : currency,
             'bandwidth' : bandwidth,
             'fee' : fee,
-            'lock_time' : lock_time};
+            'lock_time' : lock_time,
+            'input_hash' : input_hash,
+            'input_i' : input_i,
+            'pkh_contract_refund' : pkh_contract_refund,
+            'pkh_contract_multisig' : pkh_contract_multisig };
 };
 
 /**
@@ -110,7 +181,7 @@ setup_begin.prototype._parseBuffer = function(wrapper) {
 setup_begin.prototype.toBuffer = function() {
 
     // Calculate net byte size of message
-    var TOTAL_BYTE_SIZE = 1 + 1 + 3*4;
+    var TOTAL_BYTE_SIZE = 1 + 1 + 3*4 + TX_HASH_SIZE + 4 + 2*PKH_SIZE;
 
     // Create buffer
     var buffer = new Buffer(TOTAL_BYTE_SIZE);
@@ -124,6 +195,10 @@ setup_begin.prototype.toBuffer = function() {
     wrapper.writeUInt32BE(this.bandwidth);
     wrapper.writeUInt32BE(this.fee);
     wrapper.writeUInt32BE(this.lock_time);
+    wrapper.writeBuffer(this.input_hash);
+    wrapper.writeBuffer(this.input_i);
+    wrapper.writeBuffer(this.pkh_contract_refund);
+    wrapper.writeBuffer(this.pkh_contract_multisig);
 
     // Return buffer
     return buffer;
@@ -135,26 +210,13 @@ setup_begin.prototype.toBuffer = function() {
  */
 setup_begin.prototype.equals = function (obj) {
 
-    // id
-    if(this.id != obj.id)
-        return false;
-
-    // currency
-    if(this.currency != obj.currency)
-        return false;
-
-    // bandwidth
-    if(this.bandwidth != obj.bandwidth)
-        return false;
-
-    // fee
-    if(this.fee != obj.fee)
-        return false;
-
-    // lock_time
-    if(this.lock_time != obj.lock_time)
-        return false;
-
-    // Return true
-    return true;
+    return  (this.id == obj.id) &&
+            (this.currency == obj.currency) &&
+            (this.bandwidth == obj.bandwidth) &&
+            (this.fee == obj.fee) &&
+            (this.lock_time == obj.lock_time) &&
+            equal_arrays(this.input_hash, obj.input_hash) &&
+            (this.input_i == obj.input_i) &&
+            equal_arrays(this.pkh_contract_refund, obj.pkh_contract_refund) &&
+            equal_arrays(this.pkh_contract_multisig, obj.pkh_contract_multisig);
 };

@@ -63,4 +63,19 @@ message.prototype._validate_and_process = function(expectedId, expectedfields) {
 
 };
 
+/**
+ *  Recover message into raw buffer form, used for subclasses which have no tobuffer()
+*/
+message.prototype.toBuffer = function() {
+
+    // Create a buffer with space for id
+    var b = new Buffer(1);
+
+    // Save message id
+    b[0] = this.id;
+
+    // Return buffer
+    return b;
+};
+
 module.exports = message;

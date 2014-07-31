@@ -17,7 +17,12 @@ var is_positive_int = require('../utilities').is_positive_int;
  *  Constructor for list class
  *  @param {Buffer} full buffer with raw message (including id)
  *  or
- *  @param {Object} object with fields: previous_output_h,previous_output_i,pk_1,pk_2,pk_3,pk_4
+ *  @param {Object} object with fields:
+ *  {Buffer|String} input_hash
+ *  {Number} input_i
+ *  {Buffer|String} pkh_contract_change
+ *  {Buffer|String} pkh_contract_multisig
+ *  {Buffer pkh_payment
  */
 function setup_begin_accept(arg) {
 
@@ -43,7 +48,7 @@ module.exports = setup_begin_accept;
 setup_begin_accept.prototype._validate_and_process = function() {
 
     // Do base message validation
-    this.__proto__.__proto__._validate_and_process.call(this, MESSAGE_NAME_TO_ID.setup_begin_accept, ['previous_output_h','previous_output_i','pk_1','pk_2','pk_3','pk_4']);
+    this.__proto__.__proto__._validate_and_process.call(this, MESSAGE_NAME_TO_ID.setup_begin_accept, ['input_hash','input_i','pkh_contract_change','pkh_contract_multisig','pkh_payment']);
 
     /*
     // currency
@@ -136,26 +141,10 @@ setup_begin_accept.prototype.toBuffer = function() {
  */
 setup_begin_accept.prototype.equals = function (obj) {
 
-    // id
-    if(this.id != obj.id)
-        return false;
-
-    // currency
-    if(this.currency != obj.currency)
-        return false;
-
-    // bandwidth
-    if(this.bandwidth != obj.bandwidth)
-        return false;
-
-    // fee
-    if(this.fee != obj.fee)
-        return false;
-
-    // lock_time
-    if(this.lock_time != obj.lock_time)
-        return false;
-
     // Return true
-    return true;
+    return (this.id == obj.id) &&
+           (this.currency == obj.currency) &&
+           (this.bandwidth == obj.bandwidth) &&
+           (this.fee == obj.fee) &&
+           (this.lock_time == obj.lock_time);
 };

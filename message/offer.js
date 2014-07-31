@@ -14,13 +14,19 @@ var NUM_CURRENCIES = require('../variables').NUM_CURRENCIES;
 var is_int = require('../utilities').is_int;
 var flattenArray = require('../utilities').flattenArray;
 var reshapeArray = require('../utilities').reshapeArray;
-var multiDimArrayEquality = require('../utilities').multiDimArrayEquality;
+var equal_arrays = require('../utilities').equal_arrays;
 
 /**
  *  Constructor for list class
  *  @param {Buffer} full buffer with raw message (including id)
  *  or
- *  @param {Object} object with fields: currencies, bandwidths, price, fee, minimum
+ *  @param {Object} object with fields:
+ *  {Number} num_currencies
+ *  {Array of Numbers} currencies
+ *  {Number} bandwidths
+ *  {Array of Array of Numbers} price
+ *  {Array of Array of Numbers} fee
+ *  {Array of Array of Numbers} minimum
  */
 function offer(arg) {
 
@@ -213,33 +219,12 @@ offer.prototype.toBuffer = function() {
  */
 offer.prototype.equals = function (obj) {
 
-    // id
-    if(this.id != obj.id)
-        return false;
-
-    // num_currencies
-    if(this.num_currencies != obj.num_currencies)
-        return false;
-
-    // currencies
-    for(var i = 0;i < this.num_currencies;i++)
-        if(this.currencies[i] != obj.currencies[i])
-            return false;
-
-    // num_bandwidths
-    if(this.num_bandwidths != obj.num_bandwidths)
-        return false;
-
-    // bandwidths
-    for(var i = 0;i < this.num_bandwidths;i++)
-        if(this.bandwidths[i] != obj.bandwidths[i])
-            return false;
-
-    // Check the remaining 2d arrays
-    var equal_price = multiDimArrayEquality(this.price,obj.price);
-    var equal_fee = multiDimArrayEquality(this.fee,obj.fee);
-    var equal_minimum = multiDimArrayEquality(this.minimum,obj.minimum);
-
-    // Return conjunctive test
-    return equal_price && equal_fee && equal_minimum;
+    return  (this.id == obj.id) &&
+            (this.num_currencies == obj.num_currencies) &&
+            equal_arrays(this.currencies, obj.currencies) &&
+            (this.num_bandwidths == obj.num_bandwidths) &&
+            equal_arrays(this.bandwidths, obj.bandwidths) &&
+            equal_arrays(this.price,obj.price) &&
+            equal_arrays(this.fee,obj.fee) &&
+            equal_arrays(this.minimum,obj.minimum);
 };

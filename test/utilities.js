@@ -6,7 +6,7 @@ var expect = require('chai').expect;
 var is_int = require('../utilities').is_int;
 var flattenArray = require('../utilities').flattenArray;
 var reshapeArray = require('../utilities').reshapeArray;
-var multiDimArrayEquality = require('../utilities').multiDimArrayEquality;
+var equal_arrays = require('../utilities').equal_arrays;
 
 var fixtures = require('./fixtures/utilities.json');
 
@@ -70,14 +70,14 @@ describe('Utilities', function() {
             };
 
         });
-    })
+    });
 
-    it('multiDimArrayEquality', function () {
+    it('equal_arrays', function () {
 
-        fixtures.multiDimArrayEquality.forEach(function (e) {
+        fixtures.equal_arrays.forEach(function (e) {
 
             // Result of comparison
-            var eq = multiDimArrayEquality(e.arr1, e.arr2);
+            var eq = equal_arrays(e.arr1, e.arr2);
 
             // Assert correct output
             expect(eq).to.equal(!!e.result);

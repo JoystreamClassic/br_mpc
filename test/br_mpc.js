@@ -58,7 +58,7 @@ var offer_fixtures = require('./fixtures/offer.json');
 var setup_begin_fixtures = require('./fixtures/setup_begin.json');
 
 // Check that br_mpc.onMessage fires correct event
-describe('Message processing works for message', function () {
+describe('Message processing works for', function () {
 
     // ms Timeout used for all done() call backs
     this.timeout(500);

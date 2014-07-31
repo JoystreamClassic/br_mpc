@@ -19,18 +19,3 @@ module.exports = list;
 
 // Inherit from Message class
 inherits(list, message);
-
-/**
- *  Recover message into raw buffer form
- */
-list.prototype.toBuffer = function() {
-
-    // Create a buffer with space for id
-    var b = new Buffer(1);
-
-    // Save message id
-    b[0] = this.id;
-
-    // Return buffer
-    return b;
-};

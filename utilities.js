@@ -95,7 +95,7 @@ module.exports.reshapeArray = function(arr, dimensions) {
  * @param {Array} arr1
  * @param {Array} arr2
  */
-module.exports.multiDimArrayEquality = function f(arr1, arr2) {
+module.exports.equal_arrays = function f(arr1, arr2) {
 
     // Compare length
     if(arr1.length != arr2.length)
@@ -111,7 +111,7 @@ module.exports.multiDimArrayEquality = function f(arr1, arr2) {
             if (!f(elm1, elm2))
                 return false;
         } else {
-            if (elm1 != elm2)
+            if (elm1 !== elm2)
                 return false;
         }
     }

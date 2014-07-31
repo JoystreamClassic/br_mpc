@@ -19,18 +19,3 @@ module.exports = setup_begin_reject;
 
 // Inherit from Message class
 inherits(setup_begin_reject, message);
-
-/**
- *  Recover message into raw buffer form
- */
-setup_begin_reject.prototype.toBuffer = function() {
-
-    // Create a buffer with space for id
-    var b = new Buffer(1);
-
-    // Save message id
-    b[0] = this.id;
-
-    // Return buffer
-    return b;
-};

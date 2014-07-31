@@ -6,7 +6,11 @@
                 "currency":67,
                 "bandwidth":1,
                 "fee":1,
-                "lock_time":1
+                "lock_time":1,
+                "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+                "input_i": 1,
+                "pkh_contract_refund": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6"
 				},
 			"exception":"Invalid currency: 67"
 		},
@@ -16,7 +20,11 @@
                  "currency":1,
                  "bandwidth":-3,
                  "fee":1,
-                 "lock_time":1
+                 "lock_time":1,
+                 "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+                 "input_i": 1,
+                 "pkh_contract_refund": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                 "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6"
                 },
              "exception":"Invalid bandwidth: -3"
 		},
@@ -26,7 +34,11 @@
                 "currency":1,
                 "bandwidth":1,
                 "fee":-3,
-                "lock_time":1
+                "lock_time":1,
+                "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+                "input_i": 1,
+                "pkh_contract_refund": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6"
             },
             "exception":"Invalid fee: -3"
 		},
@@ -36,10 +48,66 @@
                 "currency":1,
                 "bandwidth":1,
                 "fee":1,
-                "lock_time":-3
+                "lock_time":-3,
+                "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+                "input_i": 1,
+                "pkh_contract_refund": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6"
             },
             "exception":"Invalid lock_time: -3"
-		}
+		},
+        {
+            "description":"invalid input_hash",
+            "arguments":{
+               "currency":1,
+               "bandwidth":1,
+               "fee":1,
+               "lock_time":1,
+               "input_hash": "2a083a601b278e74fab132884d643f3d94ffa0",
+               "input_i": 1,
+               "pkh_contract_refund": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+               "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6"
+            }
+        },
+        {
+            "description":"invalid input_i",
+            "arguments":{
+               "currency":1,
+               "bandwidth":1,
+               "fee":1,
+               "lock_time":1,
+               "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+               "input_i": -1,
+               "pkh_contract_refund": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+               "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6"
+            }
+        },
+        {
+            "description":"invalid pkh_refund",
+            "arguments":{
+               "currency":1,
+               "bandwidth":1,
+               "fee":1,
+               "lock_time":1,
+               "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+               "input_i": 1,
+               "pkh_contract_refund": "00010966776006953D50D273BEED61967F6",
+               "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6"
+            }
+        },
+        {
+            "description":"invalid pkh_contract",
+            "arguments":{
+               "currency":1,
+               "bandwidth":1,
+               "fee":1,
+               "lock_time":1,
+               "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+               "input_i": 1,
+               "pkh_contract_refund": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+               "pkh_contract_multisig": "00010966776006953D5567439E56"
+            }
+        }
    ],
    "valid":[
 		{
@@ -48,7 +116,11 @@
                 "currency":1,
                 "bandwidth":1,
                 "fee":1,
-                "lock_time":1
+                "lock_time":1,
+                "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+                "input_i": 1,
+                "pkh_contract_refund": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6"
             }
 		}
    ]

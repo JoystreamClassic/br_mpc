@@ -10,9 +10,12 @@ var inherits = require('util').inherits;
 var MESSAGE_ID_TO_NAME = require('./variables').MESSAGE_ID_TO_NAME;
 var MESSAGE_NAME_TO_ID = require('./variables').MESSAGE_NAME_TO_ID;
 
+// Import message sub classes
 var list = require('./message/list');
 var offer = require('./message/offer');
 var setup_begin = require('./message/setup_begin');
+var setup_begin_reject = require('./message/setup_begin_reject');
+var setup_begin_accept = require('./message/setup_begin_accept');
 
 module.exports = function () {
 	
@@ -61,6 +64,10 @@ module.exports = function () {
                 return new offer(buffer);
             case MESSAGE_NAME_TO_ID.setup_begin:
                 return new setup_begin(buffer);
+            case MESSAGE_NAME_TO_ID.setup_begin_reject:
+                return new setup_begin_reject(buffer);
+            case MESSAGE_NAME_TO_ID.setup_begin_accept:
+                return new setup_begin_accept(buffer);
 		}
 	};
 	
