@@ -1,0 +1,85 @@
+{
+   "invalid":[
+		{
+			"description":"invalid input_hash",
+			"arguments": {
+                "input_hash": "2a08357d20a4dbe74fab132884d643f3d94ffa",
+                "input_i": 1,
+                "pkh_contract_change": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "pkh_payment": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "s_1": "304502206e21798a42fae0e854281abd38bacd1aeed3ee3738d9e1446618c4571d1090db022100e2ac980643b0b82c0e88ffdfec6b64e3e6ba35e7ba5fdd7d5d6cc8d25c6b241501"
+				},
+			"exception":"Invalid input_hash"
+		},
+		{
+             "description":"invalid input_i",
+             "arguments":{
+                 "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+                 "input_i": -3,
+                 "pkh_contract_change": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                 "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                 "pkh_payment": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                 "s_1": "304502206e21798a42fae0e854281abd38bacd1aeed3ee3738d9e1446618c4571d1090db022100e2ac980643b0b82c0e88ffdfec6b64e3e6ba35e7ba5fdd7d5d6cc8d25c6b241501"
+                },
+             "exception":"Invalid input_i: -3"
+		},
+        {
+            "description":"invalid pkh_contract_change",
+            "arguments":{
+                "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+                "input_i": 1,
+                "pkh_contract_change": "07439E5E39F86A0D273BEED61967F6",
+                "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "pkh_payment": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "s_1": "304502206e21798a42fae0e854281abd38bacd1aeed3ee3738d9e1446618c4571d1090db022100e2ac980643b0b82c0e88ffdfec6b64e3e6ba35e7ba5fdd7d5d6cc8d25c6b241501"
+            }
+        },
+        {
+            "description":"invalid pkh_contract_multisig",
+            "arguments":{
+                "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+                "input_i": 1,
+                "pkh_contract_change": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "pkh_contract_multisig": "0439E5E39F86A0D273BEED61967F6",
+                "pkh_payment": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "s_1": "304502206e21798a42fae0e854281abd38bacd1aeed3ee3738d9e1446618c4571d1090db022100e2ac980643b0b82c0e88ffdfec6b64e3e6ba35e7ba5fdd7d5d6cc8d25c6b241501"
+            }
+        },
+        {
+            "description":"invalid pkh_payment",
+            "arguments":{
+                "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+                "input_i": 1,
+                "pkh_contract_change": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "pkh_payment": "0009F86A0D273BEED61967F6",
+                "s_1": "304502206e21798a42fae0e854281abd38bacd1aeed3ee3738d9e1446618c4571d1090db022100e2ac980643b0b82c0e88ffdfec6b64e3e6ba35e7ba5fdd7d5d6cc8d25c6b241501"
+            }
+        },
+       {
+           "description":"invalid s_1",
+           "arguments":{
+               "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+               "input_i": 1,
+               "pkh_contract_change": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+               "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+               "pkh_payment": "0009F86A0D273BEED61967F6",
+               "s_1": "304502206e21798a42fae0e854281abd38bacd1aeed3ee3738d9e1446618c4571d1090db022100e2ac980643b0b82c0e88ffdfec6b64e3e6ba35e7ba5fdd7d5d6cc8d25c6b241501457815"
+           }
+       }
+   ],
+   "valid":[
+		{
+            "description":"classic valid message",
+            "arguments":{
+                "input_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0",
+                "input_i": 1,
+                "pkh_contract_change": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "pkh_contract_multisig": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "pkh_payment": "00010966776006953D5567439E5E39F86A0D273BEED61967F6",
+                "s_1": "304502206e21798a42fae0e854281abd38bacd1aeed3ee3738d9e1446618c4571d1090db022100e2ac980643b0b82c0e88ffdfec6b64e3e6ba35e7ba5fdd7d5d6cc8d25c6b241501"
+            }
+		}
+   ]
+}

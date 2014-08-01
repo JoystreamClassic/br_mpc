@@ -6,13 +6,21 @@
 var expect = require('chai').expect;
 
 // Run generic test for all relevant subclasses
-['offer','setup_begin'].forEach(function(name) {
+['offer','setup_begin','setup_begin_accept'].forEach(function(name) {
+
+    // Load external modules/fixtures
+    var ctr = require('../message/' + name); // function() { console.log(name + '\n'); };
+    var fixtures = require('./fixtures/' + name + '.json');
+
+    // Run test
+    message_tester(name, ctr, fixtures);
+
+});
+
+// Testing routine
+function message_tester(name, ctr, fixtures) {
 
     describe(name, function () {
-
-        // load external modules/fixture
-        var ctr = function() { console.log(name); }; // require('../message/' + name);
-        var fixtures = require('./fixtures/' + name + '.json');
 
         var fn = function (arg) {
 
@@ -48,7 +56,7 @@ var expect = require('chai').expect;
             });
         });
 
-        describe.only('composition of encoding and decoding is consistent when passed', function () {
+        describe('composition of encoding and decoding is consistent when passed', function () {
 
             fixtures.valid.forEach(function (element) {
 
@@ -70,5 +78,4 @@ var expect = require('chai').expect;
         });
 
     });
-
-});
+};

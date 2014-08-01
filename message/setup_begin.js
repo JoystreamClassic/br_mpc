@@ -196,7 +196,7 @@ setup_begin.prototype.toBuffer = function() {
     wrapper.writeUInt32BE(this.fee);
     wrapper.writeUInt32BE(this.lock_time);
     wrapper.writeBuffer(this.input_hash);
-    wrapper.writeBuffer(this.input_i);
+    wrapper.writeUInt32BE(this.input_i);
     wrapper.writeBuffer(this.pkh_contract_refund);
     wrapper.writeBuffer(this.pkh_contract_multisig);
 

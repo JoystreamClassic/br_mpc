@@ -54,4 +54,6 @@ module.exports.CURRENCY_NAME_TO_ID = CURRENCY_NAME_TO_ID;
 // Transaction field sizes
 module.exports.PKH_SIZE = 25;
 module.exports.TX_HASH_SIZE = 32;
+module.exports.MAX_DER_SIZE = 73;
+module.exports.MIN_DER_SIZE = 50; // Not sure about this, wiki says it can become shorter than 70 with exp. decreasing probability
 //module.exports.TX_OUTPUT_INDEX_SIZE = 4;

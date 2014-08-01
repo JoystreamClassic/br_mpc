@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "bittorrent-protocol": "*",
-    "buffer-wrapper": "0.0.5"
+    "buffer-wrapper": "0.0.8"
   },
   "devDependencies": {
     "chai": "*",
