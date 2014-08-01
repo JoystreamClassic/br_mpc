@@ -16,6 +16,15 @@ var offer = require('./message/offer');
 var setup_begin = require('./message/setup_begin');
 var setup_begin_reject = require('./message/setup_begin_reject');
 var setup_begin_accept = require('./message/setup_begin_accept');
+var setup_refund = require('./message/setup_refund');
+var setup_refund_signed = require('./message/setup_refund_signed');
+var setup_contract_published = require('./message/setup_contract_published');
+var setup_contract_completed = require('./message/setup_contract_completed');
+var piece_get = require('./message/piece_get');
+var piece_missing = require('./message/piece_missing');
+var piece_put = require('./message/piece_put');
+var piece_payment = require('./message/piece_payment');
+var end = require('./message/end');
 
 module.exports = function () {
 	
@@ -73,14 +82,16 @@ module.exports = function () {
                 return new setup_refund_signed(buffer);
             case MESSAGE_NAME_TO_ID.setup_contract_published:
                 return new setup_contract_published(buffer);
-            case MESSAGE_NAME_TO_ID.setup_completed:
-                return new setup_completed(buffer);
+            case MESSAGE_NAME_TO_ID.setup_contract_completed:
+                return new setup_contract_completed(buffer);
             case MESSAGE_NAME_TO_ID.piece_get:
                 return new piece_get(buffer);
             case MESSAGE_NAME_TO_ID.piece_missing:
                 return new piece_missing(buffer);
             case MESSAGE_NAME_TO_ID.piece_put:
-                return new payment(buffer);
+                return new piece_put(buffer);
+            case MESSAGE_NAME_TO_ID.piece_payment:
+                return new piece_payment(buffer);
             case MESSAGE_NAME_TO_ID.end:
                 return new end(buffer);
 		}

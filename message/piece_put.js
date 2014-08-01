@@ -8,7 +8,6 @@ var bwrapper = require('buffer-wrapper');
 
 var message = require('./message');
 var MESSAGE_NAME_TO_ID = require('../variables').MESSAGE_NAME_TO_ID;
-var TX_HASH_SIZE = require('../variables').TX_HASH_SIZE;
 
 var equal_arrays = require('../utilities').equal_arrays;
 
@@ -62,12 +61,12 @@ piece_put.prototype._parseBuffer = function(wrapper) {
 
     // data
     try {
-        var contract_hash = wrapper.readBuffer(TX_HASH_SIZE);
+        var data = wrapper.readBuffer(TX_HASH_SIZE);
     } catch (e) {
-        throw new Error('Buffer to small: invalid contract_hash field');
+        throw new Error('Buffer to small: invalid data field');
     }
     // Return object with all fields
-    return {'contract_hash' : contract_hash};
+    return {'data' : data};
 };
 
 /**
@@ -76,7 +75,7 @@ piece_put.prototype._parseBuffer = function(wrapper) {
 piece_put.prototype.toBuffer = function() {
 
     // Calculate net byte size of message
-    var TOTAL_BYTE_SIZE = 1 + TX_HASH_SIZE;
+    var TOTAL_BYTE_SIZE = 1 + this.data.length;
 
     // Create buffer
     var buffer = new Buffer(TOTAL_BYTE_SIZE);
@@ -86,7 +85,7 @@ piece_put.prototype.toBuffer = function() {
 
     // Write fields
     wrapper.writeUInt8(this.id);
-    wrapper.writeBuffer(this.contract_hash);
+    wrapper.writeBuffer(this.data);
 
     // Return buffer
     return buffer;
@@ -99,5 +98,5 @@ piece_put.prototype.toBuffer = function() {
 piece_put.prototype.equals = function (obj) {
 
     return  (this.id == obj.id) &&
-            equal_arrays(this.contract_hash, obj.contract_hash);
+            equal_arrays(this.data, obj.data);
 };
