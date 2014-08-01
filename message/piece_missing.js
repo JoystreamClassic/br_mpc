@@ -1,6 +1,6 @@
 /**
  * The subclass for piece_missing message
- * Created by Bedeho Mender on 02.07.2014.
+ * Created by Bedeho Mender on 01.08.2014.
  */
 
 var inherits = require('util').inherits;

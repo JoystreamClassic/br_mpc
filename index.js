@@ -57,7 +57,6 @@ module.exports = function () {
 		    var id = buffer[0];
 
 		switch (id) {
-		
 			case MESSAGE_NAME_TO_ID.list:
 				return new list();
             case MESSAGE_NAME_TO_ID.offer:
@@ -68,6 +67,22 @@ module.exports = function () {
                 return new setup_begin_reject(buffer);
             case MESSAGE_NAME_TO_ID.setup_begin_accept:
                 return new setup_begin_accept(buffer);
+            case MESSAGE_NAME_TO_ID.setup_refund:
+                return new setup_refund(buffer);
+            case MESSAGE_NAME_TO_ID.setup_refund_signed:
+                return new setup_refund_signed(buffer);
+            case MESSAGE_NAME_TO_ID.setup_contract_published:
+                return new setup_contract_published(buffer);
+            case MESSAGE_NAME_TO_ID.setup_completed:
+                return new setup_completed(buffer);
+            case MESSAGE_NAME_TO_ID.piece_get:
+                return new piece_get(buffer);
+            case MESSAGE_NAME_TO_ID.piece_missing:
+                return new piece_missing(buffer);
+            case MESSAGE_NAME_TO_ID.piece_put:
+                return new payment(buffer);
+            case MESSAGE_NAME_TO_ID.end:
+                return new end(buffer);
 		}
 	};
 	

@@ -6,7 +6,7 @@
 var expect = require('chai').expect;
 
 // Run generic test for all relevant subclasses
-['offer','setup_begin','setup_begin_accept','setup_refund','setup_refund_signed','piece_get'].forEach(function(name) {
+['offer','setup_begin','setup_begin_accept','setup_refund','setup_refund_signed','piece_get','payment'].forEach(function(name) {
 
     // Load external modules/fixtures
     var ctr = require('../message/' + name); // function() { console.log(name + '\n'); };
