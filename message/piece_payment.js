@@ -1,5 +1,5 @@
 /**
- * The subclass for payment message
+ * The subclass for piece_payment message
  * Created by Bedeho Mender on 01.08.2014.
  */
 
@@ -14,37 +14,37 @@ var MIN_DER_SIZE = require('../variables').MIN_DER_SIZE;
 var equal_arrays = require('../utilities').equal_arrays;
 
 /**
- *  Constructor for payment class
+ *  Constructor for piece_payment class
  *  @param {Buffer} full buffer with raw message (including id)
  *  or
  *  @param {Object} object with fields:
  *  {Buffer|String} s_3
  */
-function payment(arg) {
+function piece_payment(arg) {
 
     // Check that we have input
     if(!arg)
         throw new Error('Invalid argument: To few arguments provided.');
 
     // Call parent class constructor
-    message.call(this, MESSAGE_NAME_TO_ID.payment, arg);
+    message.call(this, MESSAGE_NAME_TO_ID.piece_payment, arg);
 
     // Do message verification and processing
     this._validate_and_process();
 }
 
 // Inherit from Message class
-inherits(payment, message);
+inherits(piece_payment, message);
 
-module.exports = payment;
+module.exports = piece_payment;
 
 /**
  *  Check that message is valid
  */
-payment.prototype._validate_and_process = function() {
+piece_payment.prototype._validate_and_process = function() {
 
     // Do base message validation
-    this.__proto__.__proto__._validate_and_process.call(this, MESSAGE_NAME_TO_ID.payment, ['s_3']);
+    this.__proto__.__proto__._validate_and_process.call(this, MESSAGE_NAME_TO_ID.piece_payment, ['s_3']);
 
     // s_3: can be either buffer or hex string,
     // if string, substitute with Buffer instead
@@ -59,7 +59,7 @@ payment.prototype._validate_and_process = function() {
 /**
  *  Parse wrapped raw buffer which is positioned after id field
  */
-payment.prototype._parseBuffer = function(wrapper) {
+piece_payment.prototype._parseBuffer = function(wrapper) {
 
     // Read signature length
     try {
@@ -84,7 +84,7 @@ payment.prototype._parseBuffer = function(wrapper) {
 /**
  *  Transform message into raw buffer form
  */
-payment.prototype.toBuffer = function() {
+piece_payment.prototype.toBuffer = function() {
 
     // Calculate net byte size of message
     var TOTAL_BYTE_SIZE = 1 + 1 + this.s_3.length;
@@ -105,10 +105,10 @@ payment.prototype.toBuffer = function() {
 };
 
 /**
- *  Compare payment messages
- *  {payment} obj, note: we never actually check that object has necessary fields
+ *  Compare piece_payment messages
+ *  {piece_payment} obj, note: we never actually check that object has necessary fields
  */
-payment.prototype.equals = function (obj) {
+piece_payment.prototype.equals = function (obj) {
 
     return  (this.id == obj.id) &&
             equal_arrays(this.s_3, obj.s_3);
