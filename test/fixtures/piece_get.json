@@ -1,0 +1,19 @@
+{
+   "invalid":[
+		{
+			"description":"Invalid n",
+			"arguments": {
+                "n": -5
+				},
+			"exception":"Invalid n"
+		}
+   ],
+   "valid":[
+		{
+            "description":"classic valid message",
+            "arguments":{
+                "n": 7
+            }
+		}
+   ]
+}

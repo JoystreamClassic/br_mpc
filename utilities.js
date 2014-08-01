@@ -21,7 +21,7 @@ module.exports.is_int = function(value) {
  * @param  {Number} value
  */
 module.exports.is_positive_int = function(value) {
-    return (value > 0) && module.exports.is_int(value);
+    return (value >= 0) && module.exports.is_int(value);
 };
 
 /**
