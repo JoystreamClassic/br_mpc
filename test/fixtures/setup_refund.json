@@ -1,0 +1,19 @@
+{
+   "invalid":[
+		{
+			"description":"invalid contract_hash",
+			"arguments": {
+                "contract_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94a0"
+				},
+			"exception":"Invalid contract_hash"
+		}
+   ],
+   "valid":[
+		{
+            "description":"classic valid message",
+            "arguments":{
+                "contract_hash": "2a083a601b278cff74efa728dc157657d20a4dbe74fab132884d643f3d94ffa0"
+            }
+		}
+   ]
+}

@@ -17,7 +17,7 @@ var reshapeArray = require('../utilities').reshapeArray;
 var equal_arrays = require('../utilities').equal_arrays;
 
 /**
- *  Constructor for list class
+ *  Constructor for offer class
  *  @param {Buffer} full buffer with raw message (including id)
  *  or
  *  @param {Object} object with fields:
