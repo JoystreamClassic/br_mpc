@@ -61,7 +61,7 @@ piece_put.prototype._parseBuffer = function(wrapper) {
 
     // data
     try {
-        var data = wrapper.readBuffer(TX_HASH_SIZE);
+        var data = wrapper.readBuffer(...);
     } catch (e) {
         throw new Error('Buffer to small: invalid data field');
     }
